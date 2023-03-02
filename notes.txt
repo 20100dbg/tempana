@@ -1,0 +1,42 @@
+Pour chaque, donner une fenêtre temporelle partielle ou complète
+
+evolution globale
+- regrouper les evenement par jour, semaine, mois ou années
+
+evolution globale par type d'evenement
+- regrouper les evenement par jour, semaine, mois ou années
+evolution du type de menace
+
+
+étude des récurrences
+
+- nb d'evenement par :
+-- heure de la journée
+-- heure par jour par semaine (radial type anastasia)
+-- jour de la semaine
+-- jour dans le mois
+-- semaine dans l'année
+
+- nb d'evenement par type / par :
+-- idem
+
+
+
+éléments les plus actifs sur la période
+- filtre les X éléments les plus actifs
+
+
+- période réglable sur tous les graphs ?
+
+Permettre la fusion de 2+ colonnes
+
+
+récurrence d'éléments individuels (type MAC)
+- ciblage
+- données de masse
+
+
+
+xy-line-highlight-on-legend-hover
+xy-stacked-step
+
