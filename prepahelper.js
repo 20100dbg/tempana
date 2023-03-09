@@ -1,3 +1,12 @@
+function buildTabSerie(data, idxColonne)
+{
+  var tabSerie = [];
+  for (var i = 0; i < data.length; i++)
+    if (!tabSerie.includes(data[i][idxColonne]))
+      tabSerie.push(data[i][idxColonne]);
+  return tabSerie;
+}
+
 
 function DayNumberToDayString(val)
 {
@@ -40,4 +49,27 @@ function getDate(val, uniteTemps)
   else if (uniteTemps == 2) return val.getFullYear() + '-' + val.getWeek();
   else if (uniteTemps == 3) return val.toLocaleDateString();
   else if (uniteTemps == 4) return val.toLocaleDateString() + " " + val.getHours();
+}
+
+
+function getMinDate(tab)
+{
+  var min = new Date(2999, 11, 31);
+  for (var i = 0; i < tab.length; i++)
+  {
+    var tmpDate = new Date(ConvDateFromExcel(tab[i][0]));
+    if (min.getTime() > tmpDate.getTime()) min = tmpDate;
+  }
+  return min;
+}
+
+function getMaxDate(tab)
+{
+  var max = new Date(0, 0, 1);
+  for (var i = 0; i < tab.length; i++)
+  {
+    var tmpDate = new Date(ConvDateFromExcel(tab[i][0]));
+    if (max.getTime() < tmpDate.getTime()) max = tmpDate;
+  }
+  return max;
 }

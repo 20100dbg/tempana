@@ -1,38 +1,3 @@
-function getAnneePays()
-{
-  return [{
-    "year": "2018",
-    "europe": 2.5,
-    "namerica": 2.5,
-    "africa": 0.4
-  }, {
-    "year": "2019",
-    "europe": 2.5,
-    "namerica": 2.5,
-    "africa": 0.4
-  }, {
-    "year": "2020",
-    "europe": 2.5,
-    "namerica": 2.5,
-    "africa": 0.4
-  }, {
-    "year": "2021",
-    "europe": 2.5,
-    "namerica": 2.5,
-    "africa": 0.4
-  }, {
-    "year": "2022",
-    "europe": 2.6,
-    "namerica": 2.7,
-    "africa": 0.3
-  }, {
-    "year": "2023",
-    "europe": 2.8,
-    "namerica": 2.9,
-    "africa": 0.5
-  }];
-}
-
 function getMAC()
 {
 	return [

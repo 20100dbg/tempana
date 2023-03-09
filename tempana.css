@@ -1,7 +1,13 @@
 .chart {
-    width: 1000px; /* 80% */
+    width: 1000px;
     height: 600px;
-    float: left;
     margin: 10px;
-    border: 1px solid #eee;
+    border: 1px solid #555;
+}
+
+
+#fileInput {
+  border: 1px solid #000000; 
+  padding: 10px;
+  width: 220px;
 }
