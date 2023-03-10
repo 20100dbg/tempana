@@ -64,7 +64,7 @@ function createXYcluster(data)
   var root = am5.Root.new(container);
   root.setThemes([ am5themes_Animated.new(root) ]);
 
-  data = buildData2(data, 2, 1);
+  data = buildData2(data, idxColonne, idxUniteTemps);
 
   var chart = root.container.children.push(am5xy.XYChart.new(root, {
     panX: false,
@@ -171,7 +171,7 @@ function createMultiSeries(data)
     })
   );
 
-  data = buildData3(data, 2);
+  data = buildData3(data, idxColonne);
 
   for (var serie in data)
   {
@@ -255,7 +255,7 @@ function createMultiSeries(data)
 
 
 
-function createActifs()
+function createActifs(data)
 {
   var container = document.getElementById("chart4");
   var root = am5.Root.new(container);
@@ -284,7 +284,7 @@ function createActifs()
 
   var xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root, {
     maxDeviation: 0.3,
-    categoryField: "mac",
+    categoryField: "eltec",
     renderer: xRenderer,
     tooltip: am5.Tooltip.new(root, {})
   }));
@@ -302,7 +302,7 @@ function createActifs()
     yAxis: yAxis,
     valueYField: "value",
     sequencedInterpolation: true,
-    categoryXField: "mac",
+    categoryXField: "eltec",
     tooltip: am5.Tooltip.new(root, {
       labelText: "{valueY}"
     })
@@ -317,7 +317,7 @@ function createActifs()
     return chart.get("colors").getIndex(series.columns.indexOf(target));
   });
 
-  var data = buildData4(getMAC());
+  data = buildData4(data);
 
   xAxis.data.setAll(data);
   series.data.setAll(data);
@@ -512,7 +512,7 @@ function CreateRecurrenceHeureMois(data)
   }]);
 
 
-  data = BuildRecurrenceHeureMois(data, 2);
+  data = BuildRecurrenceHeureMois(data, idxColonne);
   series.data.setAll(data);
 
   var background = series.get("tooltip").get("background");

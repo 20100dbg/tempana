@@ -37,6 +37,11 @@ récurrence d'éléments individuels (type MAC)
 
 
 
-xy-line-highlight-on-legend-hover
-xy-stacked-step
+stats générales
+- nombre de points par categ1, categ2
+- date moyenne
+- date médianne
+- date min/max globale / définie
+- nb ligne totale / après filtres
+
 

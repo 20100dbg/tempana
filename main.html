@@ -10,17 +10,48 @@
 </head>
 <body>
 
-<div class="border" style="margin-top: 10px;">
-    <input type="file" id="fileInput" onchange="importFile();" />
+<div class="cadre">
+    <input type="file" id="fileInput" onchange="importerFichier();" />
 </div>
 
 <br>
-<button onclick="applyFilter();">Appliquer les filtres</button>
+<div class="cadre">
+<select id="selectFiltre" onchange="ajouterFormFiltre(this);"></select>
+
+<div id="filtres"></div>
+
+<button onclick="appliquerFiltre();">Appliquer les filtres</button>
+</div>
+
+
 <br>
+
+<div class="cadre">
+Colonne étudiée<br>
+<select id="criteres" onchange="changeCritere(this);"></select><br>
+<br>
+Colonne eltec<br>
+<select id="eltec" onchange="selectColonneEltec(this);"></select><br>
+<br>
+Sélection de la période<br>
+<select id="uniteTemps" onchange="changeUniteTemps(this);">
+  <option value="0">Annee</option>
+  <option value="1">Mois</option>
+  <option value="2">Semaine</option>
+  <option value="3">Jour</option>
+  <option value="4">Heure</option>
+</select>
+<br>
+<button onclick="creerGraphiques();">Appliquer</button>
+
+</div>
 
 <br>
 <button onclick="creerGraphiques();">Créer les graphiques</button>
 <br>
+<br>
+<br>
+
 
 <div class="container">
 <div class="row">
@@ -63,9 +94,6 @@
 </div>
 </div>
 
-<script src="data.js"></script>
-<script src="prepahelper.js"></script>
-<script src="prepadata.js"></script>
 
 <script src="amcharts5/index.js"></script>
 <script src="amcharts5/xy.js"></script>
@@ -76,7 +104,13 @@
 <script src="bootstrap/bootstrap.min.js"></script>
 <script src="bootstrap/bootstrap.bundle.min.js"></script>
 
+<script src="data.js"></script>
+<script src="tempana.js"></script>
+<script src="import.js"></script>
+<script src="prepahelper.js"></script>
+<script src="prepadata.js"></script>
 <script src="createGraph.js"></script>
+
 <script>
 var importedData, workingData;
 
@@ -85,14 +119,15 @@ function creerGraphiques()
   createXY(workingData);
   createXYcluster(workingData);
   createMultiSeries(workingData);
-  createActifs();
+  createActifs(workingData);
   CreateRecurrenceHeureJour(workingData);
   CreateRecurrenceHeureMois(workingData);
 
 }
 
 window.onload = function() {
-  workingData = getCITHARE();
+//  workingData = getCITHARE();
+
 }
 
 </script>

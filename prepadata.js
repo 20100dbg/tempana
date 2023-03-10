@@ -1,61 +1,3 @@
-var tabUniteTemps = ["annee", "mois", "semaine", "jour", "heure" ];
-var tabSerie = [];
-var tabColor = [ "#ff0000", "#ffff00", "#00ff00", "#0080ff", "#ff80c0", "#00ffff", "#004080", "#008000", "#ff8000", "#804000", "#acac59", "#950095", "#c0c0c0"];
-
-function importFile()
-{
-  var fileInput = document.getElementById('fileInput');
-  var fileReader = new FileReader();
-
-  fileReader.onload = function (e) {
-    
-    var filename = fileInput.files[0].name;
-    //var ext = filename.substring(filename.lastIndexOf('.'));
-
-    importedData = importCSV(fileReader.result);
-  }
-  
-  fileReader.readAsText(fileInput.files[0]);
-}
-
-
-function importCSV(txt)
-{
-  var lines = txt.split('\n');
-  var data = [];
-
-  //var headerLine = lines[0].trim().split(';');
-
-  //saute la première ligne
-  for (var i = 1; i < lines.length; i++)
-  {
-    var tab = lines[i].trim().split(';');
-
-
-    var date = tab[0];
-    tab[0] = date;
-    
-    data.push(tab);
-  }
-
-  //data.sort((a, b) => a.gdh > b.gdh);
-  return data;
-}
-
-function applyFilter()
-{
-  workingData = importedData;
-}
-
-
-function addSelect(divId)
-{
-  var div = document.getElementById(divId);
-  div.innerHTML = '<select onchange="xxxx(this);">';
-  for (var i = 0; i < tabSerie.length; i++)  
-    div.innerHTML += '<option value="'+ i +'">' + tabSerie[i] + '</options>';
-  div.innerHTML += '</select>';
-}
 
 function buildData(tab)
 {
@@ -63,8 +5,7 @@ function buildData(tab)
 
   for (var i = 0; i < tab.length; i++)
   {
-    //var tmpDate = Date.parse(ConvDateFromExcel(tab[i][0]));
-    var tmpDate = new Date(ConvDateFromExcel(tab[i][0]));
+    var tmpDate = new Date(tab[i][IDX_DATE].getTime()); //new Date(ConvDateFromExcel(tab[i][0]));
     tmpDate.setHours(0,0,0,0);
 
     var flag = false;
@@ -85,15 +26,15 @@ function buildData(tab)
 
 function buildData2(tab, colonneSerie, uniteTemps)
 {
-  tabSerie = buildTabSerie(tab, colonneSerie)
+  tabSerie = buildTabValeurs(tab, colonneSerie)
   var data = [];
 
   for (var i = 0; i < tab.length; i++)
   {
-    var x = tab[i][0];
-    x = ConvDateFromExcel(x);
-    var tmpDate = new Date(x);
-    tmpDate = getDate(tmpDate, uniteTemps);
+    //var x = tab[i][IDX_DATE];
+    //x = ConvDateFromExcel(x);
+    //var tmpDate = new Date(x);
+    var tmpDate = getDate(tab[i][IDX_DATE], uniteTemps);
     
     var flag = false;
     for (var j = 0; j < data.length && !flag; j++) {
@@ -121,7 +62,7 @@ function buildData2(tab, colonneSerie, uniteTemps)
 function buildData3(tab, colonneSerie)
 {
   var data = {};
-  tabSerie = buildTabSerie(tab, colonneSerie);
+  tabSerie = buildTabValeurs(tab, colonneSerie);
 
   var startDate = getMinDate(tab);
   startDate = startDate.setHours(0,0,0,0);
@@ -143,7 +84,7 @@ function buildData3(tab, colonneSerie)
 
   for (var i = 0; i < tab.length; i++)
   {
-    var tmpDate = new Date(ConvDateFromExcel(tab[i][0]));
+    var tmpDate = new Date(tab[i][IDX_DATE].getTime());// new Date(ConvDateFromExcel(tab[i][0]));
     tmpDate.setHours(0,0,0,0);
     var maSerie = tab[i][colonneSerie];
 
@@ -171,13 +112,13 @@ function buildData4(tab)
 
   for (var i = 0; i < tab.length; i++)
   {
-    var col = tab[i][1];
+    var col = tab[i][idxColonneEltec];
     if (!(col in tmpdata)) tmpdata[col] = 1;
     else tmpdata[col] += 1;
   }
 
-  for (var mac in tmpdata)
-    data.push({"mac": mac, "value": tmpdata[mac]});
+  for (var eltec in tmpdata)
+    data.push({"eltec": eltec, "value": tmpdata[eltec]});
 
   data.sort(function(a,b) { //décroissant
     if (a.value < b.value) return 1;
@@ -209,11 +150,11 @@ function BuildRecurrenceHeureJour(tab)
 
   for (var i = 0; i < tab.length; i++)
   {
-    var x = tab[i][0];
-    x = ConvDateFromExcel(x);
+    //var x = tab[i][0];
+    //x = ConvDateFromExcel(x);
+    //var date = new Date(x);
+    var date = tab[i][IDX_DATE];
 
-    var date = new Date(x);
-    
     var jour = DayNumberToDayString(date.getUTCDay());
     var heure = date.getHours();
     heure = ((heure < 10) ? "0":"") + heure;
@@ -243,9 +184,10 @@ function BuildRecurrenceHeureMois(tab, idxColonne)
 
   for (var i = 0; i < tab.length; i++)
   {
-    var x = tab[i][0];
-    x = ConvDateFromExcel(x);
-    var date = new Date(x);
+    //var x = tab[i][0];
+    //x = ConvDateFromExcel(x);
+    //var date = new Date(x);
+    var date = tab[i][IDX_DATE];
     
     var tmpCateg = tab[i][idxColonne];
     if (!tabCateg.includes(tmpCateg)) tabCateg.push(tmpCateg);
@@ -258,7 +200,7 @@ function BuildRecurrenceHeureMois(tab, idxColonne)
     if (!(tmpCateg in tmpdata[jour][heure])) tmpdata[jour][heure][tmpCateg] = { value: 0, color: "" };
 
     tmpdata[jour][heure][tmpCateg].value += 1;
-    tmpdata[jour][heure][tmpCateg].color = tabColor[tabCateg.indexOf(tmpCateg)];
+    tmpdata[jour][heure][tmpCateg].color = tabCouleur[tabCateg.indexOf(tmpCateg)];
   }
 
 

@@ -1,10 +1,18 @@
-function buildTabSerie(data, idxColonne)
+function buildTabValeurs(data, idxColonne)
 {
-  var tabSerie = [];
+  var tabValeurs = [];
   for (var i = 0; i < data.length; i++)
-    if (!tabSerie.includes(data[i][idxColonne]))
-      tabSerie.push(data[i][idxColonne]);
-  return tabSerie;
+    if (!tabValeurs.includes(data[i][idxColonne]))
+      tabValeurs.push(data[i][idxColonne]);
+  return tabValeurs;
+}
+
+function buildTabCriteres(ligneEntetes)
+{
+  var tabCriteres = [];
+  for (var i = 3; i < ligneEntetes.length; i++)
+      tabCriteres.push(ligneEntetes[i]);
+  return tabCriteres;
 }
 
 
@@ -57,7 +65,7 @@ function getMinDate(tab)
   var min = new Date(2999, 11, 31);
   for (var i = 0; i < tab.length; i++)
   {
-    var tmpDate = new Date(ConvDateFromExcel(tab[i][0]));
+    var tmpDate = tab[i][IDX_DATE]; //new Date(ConvDateFromExcel(tab[i][0]));
     if (min.getTime() > tmpDate.getTime()) min = tmpDate;
   }
   return min;
@@ -68,7 +76,7 @@ function getMaxDate(tab)
   var max = new Date(0, 0, 1);
   for (var i = 0; i < tab.length; i++)
   {
-    var tmpDate = new Date(ConvDateFromExcel(tab[i][0]));
+    var tmpDate = tab[i][IDX_DATE]; //new Date(ConvDateFromExcel(tab[i][0]));
     if (max.getTime() < tmpDate.getTime()) max = tmpDate;
   }
   return max;
