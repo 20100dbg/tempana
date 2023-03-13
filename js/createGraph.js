@@ -1,5 +1,5 @@
 
-function createXY(data)
+function GraphEvolutionGlobale(data)
 {
   var container = document.getElementById("chart1");
   var root = am5.Root.new(container);
@@ -50,7 +50,7 @@ function createXY(data)
   var tooltip = series.set("tooltip", am5.Tooltip.new(root, {}));
   tooltip.label.set("text", "{valueY}");
 
-  data = buildData(data); //getCITHARE()
+  data = buildEvolutionGlobale(data); //getCITHARE()
   series.data.setAll(data);
 
   series.appear();
@@ -58,13 +58,15 @@ function createXY(data)
 }
 
 
-function createXYcluster(data)
+function GraphEvolutionPeriodeCateg(data)
 {
+  if (idxColonne == -1) return;
+
   var container = document.getElementById("chart2");
   var root = am5.Root.new(container);
-  root.setThemes([ am5themes_Animated.new(root) ]);
+  root.setThemes([ am5themes_Kelly.new(root) ]);
 
-  data = buildData2(data, idxColonne, idxUniteTemps);
+  data = buildEvolutionCateg(data, idxColonne, idxUniteTemps);
 
   var chart = root.container.children.push(am5xy.XYChart.new(root, {
     panX: false,
@@ -73,6 +75,9 @@ function createXYcluster(data)
     wheelY: "zoomX",
     layout: root.verticalLayout
   }));
+
+  var cursor = chart.set("cursor", am5xy.XYCursor.new(root, { behavior: "zoomX" }));
+  cursor.lineY.set("visible", false);
 
   var legend = chart.children.push(
     am5.Legend.new(root, {
@@ -133,15 +138,17 @@ function createXYcluster(data)
   for (var i = 0; i < tabSerie.length; i++)
     makeSeries(tabSerie[i], tabSerie[i])
 
-  chart.appear(1000, 100);
+  chart.appear();
 }
 
 
-function createMultiSeries(data)
+function GraphEvolutionGlobaleCateg(data)
 {
+  if (idxColonne == -1) return;
+
   var container = document.getElementById("chart3");
   var root = am5.Root.new(container);
-  root.setThemes([ am5themes_Animated.new(root) ]);
+  root.setThemes([ am5themes_Kelly.new(root) ]);
 
   var chart = root.container.children.push(
     am5xy.XYChart.new(root, {
@@ -171,7 +178,7 @@ function createMultiSeries(data)
     })
   );
 
-  data = buildData3(data, idxColonne);
+  data = buildEvolutionGlobaleCateg(data, idxColonne);
 
   for (var serie in data)
   {
@@ -250,26 +257,25 @@ function createMultiSeries(data)
 
   legend.data.setAll(chart.series.values);
 
-  chart.appear(1000, 100);
+  chart.appear();
 }
 
 
 
-function createActifs(data)
+function GraphElementsActifs(data)
 {
   var container = document.getElementById("chart4");
   var root = am5.Root.new(container);
   root.setThemes([ am5themes_Animated.new(root) ]);
 
   var chart = root.container.children.push(am5xy.XYChart.new(root, {
-    panX: true,
-    panY: true,
+    panX: false,
+    panY: false,
     wheelX: "panX",
     wheelY: "zoomX",
-    pinchZoomX: true
   }));
 
-  var cursor = chart.set("cursor", am5xy.XYCursor.new(root, {}));
+  var cursor = chart.set("cursor", am5xy.XYCursor.new(root, { behavior: "zoomX" }));
   cursor.lineY.set("visible", false);
 
   var xRenderer = am5xy.AxisRendererX.new(root, { minGridDistance: 30 });
@@ -317,16 +323,16 @@ function createActifs(data)
     return chart.get("colors").getIndex(series.columns.indexOf(target));
   });
 
-  data = buildData4(data);
+  data = buildElementsActifs(data);
 
   xAxis.data.setAll(data);
   series.data.setAll(data);
 
-  series.appear(1000);
-  chart.appear(1000, 100);
+  series.appear();
+  chart.appear();
 }
 
-function CreateRecurrenceHeureJour(data)
+function GraphRecurrenceHeureJour(data)
 {
   var container = document.getElementById("chart5");
   var root = am5.Root.new(container);
@@ -417,17 +423,24 @@ function CreateRecurrenceHeureJour(data)
 
   data = BuildRecurrenceHeureJour(data);
 
-  series.data.setAll(data);
-  yAxis.data.setAll([{ weekday: "Lundi" },{ weekday: "Mardi" },{ weekday: "Mercredi" },{ weekday: "Jeudi" },{ weekday: "Vendredi" },{ weekday: "Samedi" },{ weekday: "Dimanche" }]);
-  xAxis.data.setAll([{ hour: "00h" },{ hour: "01h" },{ hour: "02h" },{ hour: "03h" },{ hour: "04h" },{ hour: "05h" },{ hour: "06h" },{ hour: "07h" },{ hour: "08h" },{ hour: "09h" },{ hour: "10h" },{ hour: "11h" },
-    { hour: "12h" },{ hour: "13h" },{ hour: "14h" },{ hour: "15h" },{ hour: "16h" },{ hour: "17h" },{ hour: "18h" },{ hour: "19h" },{ hour: "20h" },{ hour: "21h" },{ hour: "22h" },{ hour: "23h" }]);
 
-  chart.appear(1000, 100);
+  series.data.setAll(data);
+  yAxis.data.setAll([{ weekday: "Lundi" },{ weekday: "Mardi" },{ weekday: "Mercredi" },
+    { weekday: "Jeudi" },{ weekday: "Vendredi" },{ weekday: "Samedi" },{ weekday: "Dimanche" }]);
+  xAxis.data.setAll([{ hour: "00h" },{ hour: "01h" },{ hour: "02h" },{ hour: "03h" },{ hour: "04h" },
+    { hour: "05h" },{ hour: "06h" },{ hour: "07h" },{ hour: "08h" },{ hour: "09h" },{ hour: "10h" },
+    { hour: "11h" },{ hour: "12h" },{ hour: "13h" },{ hour: "14h" },{ hour: "15h" },{ hour: "16h" },
+    { hour: "17h" },{ hour: "18h" },{ hour: "19h" },{ hour: "20h" },{ hour: "21h" },{ hour: "22h" },
+    { hour: "23h" }]);
+
+  chart.appear();
 }
 
 
-function CreateRecurrenceHeureMois(data)
+function GraphRecurrenceHeureMois(data)
 {
+  if (idxColonne == -1) return;
+
   var container = document.getElementById("chart6");
   var root = am5.Root.new(container);
   root.setThemes([ am5themes_Animated.new(root) ]);
@@ -533,7 +546,132 @@ function CreateRecurrenceHeureMois(data)
   }));
 
 
-  series.appear(1000);
-  chart.appear(1000, 100);
+  series.appear();
+  chart.appear();
 
+}
+
+
+function GraphRecurrenceSemaine(data)
+{
+  var container = document.getElementById("chart7");
+  var root = am5.Root.new(container);
+  root.setThemes([ am5themes_Animated.new(root) ]);
+
+  var chart = root.container.children.push(am5xy.XYChart.new(root, {
+    panX: false,
+    panY: false,
+    wheelX: "panX",
+    wheelY: "zoomX",
+  }));
+
+  var cursor = chart.set("cursor", am5xy.XYCursor.new(root, { behavior: "zoomX" }));
+  cursor.lineY.set("visible", false);
+
+  var xRenderer = am5xy.AxisRendererX.new(root, { minGridDistance: 30 });
+  xRenderer.labels.template.setAll({
+    rotation: -90,
+    centerY: am5.p50,
+    centerX: am5.p100,
+    paddingRight: 15
+  });
+
+  xRenderer.grid.template.setAll({ location: 1 });
+
+  var xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root, {
+    maxDeviation: 0.3,
+    categoryField: "date",
+    renderer: xRenderer,
+    tooltip: am5.Tooltip.new(root, {})
+  }));
+
+  var yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
+    maxDeviation: 0.3,
+    renderer: am5xy.AxisRendererY.new(root, {
+      strokeOpacity: 0.1
+    })
+  }));
+
+  var series = chart.series.push(am5xy.ColumnSeries.new(root, {
+    name: "Series 1",
+    xAxis: xAxis,
+    yAxis: yAxis,
+    valueYField: "value",
+    sequencedInterpolation: true,
+    categoryXField: "date",
+    tooltip: am5.Tooltip.new(root, {
+      labelText: "{valueY}"
+    })
+  }));
+
+  data = BuildRecurrenceSemaine(data);
+
+  xAxis.data.setAll(data);
+  series.data.setAll(data);
+
+  series.appear();
+  chart.appear();
+}
+
+
+
+function GraphRecurrenceJourMois(data)
+{
+  var container = document.getElementById("chart8");
+  var root = am5.Root.new(container);
+  root.setThemes([ am5themes_Animated.new(root) ]);
+
+  var chart = root.container.children.push(am5xy.XYChart.new(root, {
+    panX: false,
+    panY: false,
+    wheelX: "panX",
+    wheelY: "zoomX",
+  }));
+
+  var cursor = chart.set("cursor", am5xy.XYCursor.new(root, { behavior: "zoomX" }));
+  cursor.lineY.set("visible", false);
+
+  var xRenderer = am5xy.AxisRendererX.new(root, { minGridDistance: 30 });
+  xRenderer.labels.template.setAll({
+    rotation: -90,
+    centerY: am5.p50,
+    centerX: am5.p100,
+    paddingRight: 15
+  });
+
+  xRenderer.grid.template.setAll({ location: 1 });
+
+  var xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root, {
+    maxDeviation: 0.3,
+    categoryField: "date",
+    renderer: xRenderer,
+    tooltip: am5.Tooltip.new(root, {})
+  }));
+
+  var yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
+    maxDeviation: 0.3,
+    renderer: am5xy.AxisRendererY.new(root, {
+      strokeOpacity: 0.1
+    })
+  }));
+
+  var series = chart.series.push(am5xy.ColumnSeries.new(root, {
+    name: "Series 1",
+    xAxis: xAxis,
+    yAxis: yAxis,
+    valueYField: "value",
+    sequencedInterpolation: true,
+    categoryXField: "date",
+    tooltip: am5.Tooltip.new(root, {
+      labelText: "{valueY}"
+    })
+  }));
+
+  data = BuildRecurrenceJourMois(data);
+
+  xAxis.data.setAll(data);
+  series.data.setAll(data);
+
+  series.appear();
+  chart.appear();
 }

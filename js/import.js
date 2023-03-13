@@ -6,6 +6,10 @@ function importerFichier()
   fileReader.onload = function (e) {
     var filename = fileInput.files[0].name;
     importedData = importerCSV(fileReader.result);
+
+    startDateGlobal = getMinDate(importedData);
+    endDateGlobal = getMaxDate(importedData);
+    buildBandeau(importedData);
     workingData = importedData;
   }
   
@@ -24,10 +28,11 @@ function convertirDate(s)
     s = tab2[2] + '-' + tab2[1] + '-' + tab2[0] + ' ' + tab1[1];
     retour = new Date(s);
   }
-  else if (s.match(/[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:?[0-9]{0,2}/)) //format universel
+  else// if (s.match(/[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:?[0-9]{0,2}/)) //format universel
   {
     retour = new Date(s);
   }
+  if (retour == "Invalid Date") retour = null;
 
   return retour;
 }

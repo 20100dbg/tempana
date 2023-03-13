@@ -1,11 +1,11 @@
 
-function buildData(tab)
+function buildEvolutionGlobale(tab)
 {
   var data = [];
 
   for (var i = 0; i < tab.length; i++)
   {
-    var tmpDate = new Date(tab[i][IDX_DATE].getTime()); //new Date(ConvDateFromExcel(tab[i][0]));
+    var tmpDate = new Date(tab[i][IDX_DATE].getTime());
     tmpDate.setHours(0,0,0,0);
 
     var flag = false;
@@ -24,16 +24,13 @@ function buildData(tab)
 }
 
 
-function buildData2(tab, colonneSerie, uniteTemps)
+function buildEvolutionCateg(tab, colonneSerie, uniteTemps)
 {
   tabSerie = buildTabValeurs(tab, colonneSerie)
   var data = [];
 
   for (var i = 0; i < tab.length; i++)
   {
-    //var x = tab[i][IDX_DATE];
-    //x = ConvDateFromExcel(x);
-    //var tmpDate = new Date(x);
     var tmpDate = getDate(tab[i][IDX_DATE], uniteTemps);
     
     var flag = false;
@@ -59,7 +56,7 @@ function buildData2(tab, colonneSerie, uniteTemps)
 }
 
 
-function buildData3(tab, colonneSerie)
+function buildEvolutionGlobaleCateg(tab, colonneSerie)
 {
   var data = {};
   tabSerie = buildTabValeurs(tab, colonneSerie);
@@ -84,7 +81,7 @@ function buildData3(tab, colonneSerie)
 
   for (var i = 0; i < tab.length; i++)
   {
-    var tmpDate = new Date(tab[i][IDX_DATE].getTime());// new Date(ConvDateFromExcel(tab[i][0]));
+    var tmpDate = new Date(tab[i][IDX_DATE].getTime());
     tmpDate.setHours(0,0,0,0);
     var maSerie = tab[i][colonneSerie];
 
@@ -105,7 +102,7 @@ function buildData3(tab, colonneSerie)
 
 
 
-function buildData4(tab)
+function buildElementsActifs(tab)
 {
   var tmpdata = {};
   var data = [];
@@ -150,9 +147,6 @@ function BuildRecurrenceHeureJour(tab)
 
   for (var i = 0; i < tab.length; i++)
   {
-    //var x = tab[i][0];
-    //x = ConvDateFromExcel(x);
-    //var date = new Date(x);
     var date = tab[i][IDX_DATE];
 
     var jour = DayNumberToDayString(date.getUTCDay());
@@ -184,9 +178,6 @@ function BuildRecurrenceHeureMois(tab, idxColonne)
 
   for (var i = 0; i < tab.length; i++)
   {
-    //var x = tab[i][0];
-    //x = ConvDateFromExcel(x);
-    //var date = new Date(x);
     var date = tab[i][IDX_DATE];
     
     var tmpCateg = tab[i][idxColonne];
@@ -222,6 +213,48 @@ function BuildRecurrenceHeureMois(tab, idxColonne)
         });
       }
     }
+  }
+
+  return data;
+}
+
+
+function BuildRecurrenceSemaine(tab)
+{
+  var tmpdata = {}
+
+  for (var i = 0; i < 53; i++) tmpdata[i] = 0;
+
+  for (var i = 0; i < tab.length; i++)
+  {
+    tmpdata[tab[i][IDX_DATE].getWeek()] += 1;
+  }
+
+  var data = [];
+  for (var semaine in tmpdata)
+  {
+    data.push({ date: semaine, value: tmpdata[semaine] });
+  }
+
+  return data;
+}
+
+
+function BuildRecurrenceJourMois(tab)
+{
+  var tmpdata = {}
+
+  for (var i = 0; i < 31; i++) tmpdata[i] = 0;
+
+  for (var i = 0; i < tab.length; i++)
+  {
+    tmpdata[tab[i][IDX_DATE].getDate()] += 1;
+  }
+
+  var data = [];
+  for (var jour in tmpdata)
+  {
+    data.push({ date: jour, value: tmpdata[jour] });
   }
 
   return data;
