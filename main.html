@@ -7,7 +7,7 @@
   <link rel="stylesheet" type="text/css" href="css/slider.css">
   <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="css/bootstrap-grid.min.css">
-	<title></title>
+	<title>Tempana</title>
 </head>
 <body>
 
@@ -40,44 +40,30 @@ Filtres sur les colonnes<br>
 <br>
 <div class="cadre">
   Sélection des coordonnées<br>
-  <textarea id="filtreCoord" cols="50" placeholder="[[xx.xxx,yy.yyy],[xx.xxx,yy.yyy]]"></textarea>
+  <textarea id="filtreCoord" rows="1" cols="50" placeholder="[[yy.yyy,xx.xxx],[yy.yyy,xx.xxx]]"></textarea>
 </div>
 
 <br>
 
 <div class="cadre">
-Colonne étudiée <select id="criteres" onchange="changeCritere(this);"></select><br>
-<br>
+Colonne étudiée <select id="categ" onchange="changeCritere(this);"></select><br>
 Colonne eltec <select id="eltec" onchange="selectColonneEltec(this);"></select><br>
-<br>
 Regrouper par <select id="uniteTemps" onchange="changeUniteTemps(this);">
   <option value="0">Annee</option>
   <option value="1">Mois</option>
   <option value="2">Semaine</option>
   <option value="3">Jour</option>
   <option value="4">Heure</option>
-</select>
-<br>
-<br>
+</select><br>
 
 </div>
-<button onclick="appliquerFiltre();">Appliquer les filtres</button><br>
-<button onclick="supprimerFiltre();">Supprimer les filtres</button><br>
+<button onclick="appliquerFiltre();">Appliquer les filtres</button> - <button onclick="supprimerFiltre();">Supprimer les filtres</button><br>
 <br>
-<button onclick="creerGraphiques();">Créer les graphiques</button><br>
-<button onclick="viderGraphiques();">Vider les graphiques</button><br>
-<br>
-<br>
+<button onclick="creerGraphiques();">Créer les graphiques</button> - <button onclick="viderGraphiques();">Vider les graphiques</button><br>
 <br>
 
-
-<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#divGlobale">
-  Evolution & récurrence globales
-</button>
-
-<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#divCateg">
-  Evolution & récurrence de la catégorie
-</button>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#divGlobale">Evolution & récurrence globales</button>
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#divCateg">Evolution & récurrence de la catégorie</button>
 <br>
 
 <div class="" id="divGlobale">
@@ -89,6 +75,12 @@ Regrouper par <select id="uniteTemps" onchange="changeUniteTemps(this);">
       <div id="chart1-controls"></div>
     </div>
   
+    <div class="col">
+      <div>Evolution cumulative de tous les éléments</div>
+      <div id="chart9" class="chart"></div>
+      <div id="chart9-controls"></div>
+    </div>
+
     <div class="col">
       <div>Par heure par jour de la semaine</div>
       <div id="chart5" class="chart"></div>
@@ -115,25 +107,31 @@ Regrouper par <select id="uniteTemps" onchange="changeUniteTemps(this);">
   <div class="row">
 
     <div class="col">
-      <div>Récurrence des catégories par heure par jour du mois</div>
+      <div>Récurrence par heure par jour du mois pour <span class="nomCateg"></span></div>
       <div id="chart6" class="chart"></div>
       <div id="chart6-controls"></div>
     </div>
 
     <div class="col">
-      <div>Evolution par catégorie par périodes</div>
+      <div>Evolution par périodes pour <span class="nomCateg"></span></div>
       <div id="chart2" class="chart"></div>
       <div id="chart2-controls"></div>
     </div>
 
     <div class="col">
-      <div>Evolution globale par catégorie</div>
+      <div>Evolution globale pour <span class="nomCateg"></span></div>
       <div id="chart3" class="chart"></div>
       <div id="chart3-controls"></div>
     </div>
 
     <div class="col">
-      <div>Eléments les plus actifs</div>
+      <div>Evolution cumulative pour <span class="nomCateg"></span></div>
+      <div id="chart10" class="chart"></div>
+      <div id="chart10-controls"></div>
+    </div>
+
+    <div class="col">
+      <div>Eléments les plus actifs (<span class="nomEltec"></span>)</div>
       <div id="chart4" class="chart"></div>
       <div id="chart4-controls"></div>
     </div>
@@ -168,6 +166,16 @@ var importedData, workingData;
 
 function creerGraphiques()
 {
+  var divCateg = document.getElementById('categ');
+  var nomCateg = divCateg.item(divCateg.selectedIndex).text;
+  var divs = document.querySelectorAll('.nomCateg');
+  for (var i = 0; i < divs.length; i++) divs[i].innerHTML = nomCateg;
+
+  var divEltec = document.getElementById('eltec');
+  var nomEltec = divEltec.item(divEltec.selectedIndex).text;
+  var divs = document.querySelectorAll('.nomEltec');
+  for (var i = 0; i < divs.length; i++) divs[i].innerHTML = nomEltec;
+
   GraphEvolutionGlobale(workingData);
   GraphEvolutionPeriodeCateg(workingData);
   GraphEvolutionGlobaleCateg(workingData);
@@ -176,6 +184,8 @@ function creerGraphiques()
   GraphRecurrenceHeureMois(workingData);
   GraphRecurrenceSemaine(workingData);
   GraphRecurrenceJourMois(workingData);
+  GraphEvolutionGlobaleCumulative(workingData);
+  GraphEvolutionGlobaleCumulativeCateg(workingData);
 }
 
 function viderGraphiques()

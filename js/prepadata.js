@@ -17,11 +17,35 @@ function buildEvolutionGlobale(tab)
     }
 
     if (!flag) data.push({ date: tmpDate.getTime(), value: 1 });
-
   }
 
   return data;
 }
+
+function buildEvolutionGlobaleCumulative(tab)
+{
+  var data = [];
+  var nbEvent = 0;
+  var lastDate = 0;
+
+  for (var i = 0; i < tab.length; i++)
+  {
+    var tmpDate = new Date(tab[i][IDX_DATE].getTime());
+    tmpDate.setHours(0,0,0,0);
+    
+    if (i == 0) lastDate = tmpDate;
+    nbEvent += 1;
+
+    if (lastDate != tmpDate)
+    {
+      data.push({ date: tmpDate.getTime(), value: nbEvent });
+      lastDate = tmpDate;
+    }
+  }
+
+  return data;
+}
+
 
 
 function buildEvolutionCateg(tab, colonneSerie, uniteTemps)
@@ -51,6 +75,33 @@ function buildEvolutionCateg(tab, colonneSerie, uniteTemps)
     }
   }
   data.sort(function(a,b) { return a.date > b.date });
+
+  return data;
+}
+
+
+function buildEvolutionGlobaleCumulativeCateg(tab, colonneSerie)
+{
+  var data = {};
+  var tabNbEvent = {};
+
+  tabSerie = buildTabValeurs(tab, colonneSerie);
+  for (var i = 0; i < tabSerie.length; i++) data[tabSerie[i]] = [{date: startDatePeriode.getTime(), value:0}];
+
+  for (var i = 0; i < tab.length; i++)
+  {
+    var tmpDate = new Date(tab[i][IDX_DATE].getTime());
+    //tmpDate.setHours(0,0,0,0);
+    var maSerie = tab[i][colonneSerie];
+
+    if (!(maSerie in tabNbEvent)) tabNbEvent[maSerie] = 0;
+    tabNbEvent[maSerie] += 1;
+
+    data[maSerie].push({date: tmpDate.getTime(), value: tabNbEvent[maSerie]});
+  }
+
+  for (var i = 0; i < tabSerie.length; i++)
+    data[tabSerie[i]].push({date: endDatePeriode.getTime(), value:tabNbEvent[tabSerie[i]]});
 
   return data;
 }
@@ -99,7 +150,6 @@ function buildEvolutionGlobaleCateg(tab, colonneSerie)
 
   return data;
 }
-
 
 
 function buildElementsActifs(tab)

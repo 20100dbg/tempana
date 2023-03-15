@@ -5,7 +5,16 @@ function importerFichier()
 
   fileReader.onload = function (e) {
     var filename = fileInput.files[0].name;
-    importedData = importerCSV(fileReader.result);
+
+    if (filename.indexOf('CITHARE') > -1) importedData = importerCITHARE(fileReader.result);
+    else if (ext == ".csv") importedData = importerCSV(fileReader.result);
+    else
+    {
+      alert("Format inconnu");
+      importedData = [];
+    }
+
+    importedData.sort(function(a,b) { return a[IDX_DATE] > b[IDX_DATE] });
 
     startDateGlobal = getMinDate(importedData);
     endDateGlobal = getMaxDate(importedData);
@@ -16,6 +25,34 @@ function importerFichier()
   fileReader.readAsText(fileInput.files[0]);
 }
 
+
+function importerCITHARE(txt)
+{
+  var lines = txt.split('\n');
+  var data = [];
+
+  tabCriteres = lines[0].trim().split(';');
+  tabCriteres = tabCriteres.slice(0,2).concat(tabCriteres.slice(4));  
+  tabCriteres = buildTabCriteres(tabCriteres);
+  remplirSelectCriteres(tabCriteres);
+  remplirSelectFiltre(tabCriteres);
+  remplirSelectEltec(tabCriteres);
+
+  for (var i = 1; i < lines.length; i++)
+  {
+    if (lines[i] == "") continue;
+
+    var tab = lines[i].trim().split(';');
+    tab = tab.slice(0,2).concat(tab.slice(4));
+
+    for (var j = 0; j < tab.length; j++) tab[j] = tab[j].replace(/^"+|"+$/g, '');
+
+    tab[2] = convertirDate(tab[2]);
+    data.push(tab);
+  }
+
+  return data;
+}
 
 function convertirDate(s)
 {

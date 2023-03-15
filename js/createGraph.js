@@ -58,6 +58,56 @@ function GraphEvolutionGlobale(data)
 }
 
 
+function GraphEvolutionGlobaleCumulative(data)
+{
+  var container = document.getElementById("chart9");
+  var root = am5.Root.new(container);
+  root.setThemes([am5themes_Animated.new(root)]);
+
+  root.dateFormatter.setAll({ dateFields: ["valueX"] });
+
+  var chart = root.container.children.push(am5xy.XYChart.new(root, {
+    panX: false,
+    panY: false,
+    wheelX: "panX",
+    wheelY: "zoomX"
+  }));
+
+  var cursor = chart.set("cursor", am5xy.XYCursor.new(root, { behavior: "zoomX" }));
+  cursor.lineY.set("visible", false);
+
+  var xAxis = chart.xAxes.push(am5xy.DateAxis.new(root, {
+    maxDeviation: 0.5,
+    baseInterval: {
+      timeUnit: "day",
+      count: 1
+    },
+    renderer: am5xy.AxisRendererX.new(root, { pan:"zoom" }),
+    tooltip: am5.Tooltip.new(root, {})
+  }));
+
+  var yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
+    maxDeviation:1,
+    renderer: am5xy.AxisRendererY.new(root, { pan:"zoom" })
+  }));
+
+  var series = chart.series.push(am5xy.LineSeries.new(root, {
+    name: "Series",
+    xAxis: xAxis,
+    yAxis: yAxis,
+    valueYField: "value",
+    valueXField: "date",
+    tooltip: am5.Tooltip.new(root, { labelText: "{valueX}: {valueY}" })
+  }));
+
+  data = buildEvolutionGlobaleCumulative(data);
+
+  series.data.setAll(data);
+  
+  series.appear();
+  chart.appear();
+}
+
 function GraphEvolutionPeriodeCateg(data)
 {
   if (idxColonne == -1) return;
@@ -180,6 +230,7 @@ function GraphEvolutionGlobaleCateg(data)
 
   data = buildEvolutionGlobaleCateg(data, idxColonne);
 
+
   for (var serie in data)
   {
     var series = chart.series.push(am5xy.LineSeries.new(root, {
@@ -204,11 +255,7 @@ function GraphEvolutionGlobaleCateg(data)
   }));
   cursor.lineY.set("visible", false);
 
-/*
-  chart.set("scrollbarX", am5.Scrollbar.new(root, {
-    orientation: "horizontal"
-  }));
-*/
+
   var legend = chart.rightAxesContainer.children.push(
     am5.Legend.new(root, {
       width: 200,
@@ -259,6 +306,142 @@ function GraphEvolutionGlobaleCateg(data)
 
   chart.appear();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+function GraphEvolutionGlobaleCumulativeCateg(data)
+{
+  if (idxColonne == -1) return;
+
+  var container = document.getElementById("chart10");
+  var root = am5.Root.new(container);
+  root.setThemes([ am5themes_Kelly.new(root) ]);
+
+  var chart = root.container.children.push(
+    am5xy.XYChart.new(root, {
+      panX: false,
+      panY: false,
+      wheelX: "panX",
+      wheelY: "zoomX",
+      maxTooltipDistance: 0
+    })
+  );
+
+  var xAxis = chart.xAxes.push(
+    am5xy.DateAxis.new(root, {
+      maxDeviation: 0,
+      baseInterval: {
+        timeUnit: "day",
+        count: 1
+      },
+      renderer: am5xy.AxisRendererX.new(root, {}),
+      tooltip: am5.Tooltip.new(root, {})
+    })
+  );
+
+  var yAxis = chart.yAxes.push(
+    am5xy.ValueAxis.new(root, {
+      renderer: am5xy.AxisRendererY.new(root, {})
+    })
+  );
+
+  data = buildEvolutionGlobaleCumulativeCateg(data, idxColonne);
+
+  for (var serie in data)
+  {
+    var series = chart.series.push(am5xy.LineSeries.new(root, {
+      name: serie,
+      xAxis: xAxis,
+      yAxis: yAxis,
+      valueYField: "value",
+      valueXField: "date",
+      legendValueText: "{valueY}",
+      tooltip: am5.Tooltip.new(root, {
+        labelText: "{valueY}",
+        pointerOrientation: "horizontal"
+      })
+    }));
+    
+    series.data.setAll(data[serie]);
+    series.appear();
+  }
+
+  var cursor = chart.set("cursor", am5xy.XYCursor.new(root, {
+    behavior: "zoomX"
+  }));
+  cursor.lineY.set("visible", false);
+
+  var legend = chart.rightAxesContainer.children.push(
+    am5.Legend.new(root, {
+      width: 200,
+      paddingLeft: 15,
+      height: am5.percent(100)
+    })
+  );
+
+  legend.itemContainers.template.events.on("pointerover", function(e) {
+    var itemContainer = e.target;
+
+    var series = itemContainer.dataItem.dataContext;
+
+    chart.series.each(function(chartSeries) {
+      if (chartSeries != series) {
+        chartSeries.strokes.template.setAll({
+          strokeOpacity: 0.15,
+          stroke: am5.color(0x000000)
+        });
+      } else {
+        chartSeries.strokes.template.setAll({
+          strokeWidth: 3
+        });
+      }
+    })
+  })
+
+  legend.itemContainers.template.events.on("pointerout", function(e) {
+    var itemContainer = e.target;
+    var series = itemContainer.dataItem.dataContext;
+
+    chart.series.each(function(chartSeries) {
+      chartSeries.strokes.template.setAll({
+        strokeOpacity: 1,
+        strokeWidth: 1,
+        stroke: chartSeries.get("fill")
+      });
+    });
+  })
+
+  legend.itemContainers.template.set("width", am5.p100);
+  legend.valueLabels.template.setAll({
+    width: am5.p100,
+    textAlign: "right"
+  });
+
+  legend.data.setAll(chart.series.values);
+
+  chart.appear();
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
