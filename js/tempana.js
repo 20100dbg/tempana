@@ -68,7 +68,7 @@ function ajouterFormFiltre(obj)
 {
   if (obj.value == "-1") return;
   var div = document.getElementById('filtres');
-  div.innerHTML += '<div id="div-'+ obj.value +'"></div>';
+  div.innerHTML += '<div id="div-'+ obj.value +'" class="col-sm"></div>';
 
   div = document.getElementById("div-"+ obj.value);
   div.innerHTML = '<b>' + obj.item(obj.selectedIndex).text + '</b><br>' +

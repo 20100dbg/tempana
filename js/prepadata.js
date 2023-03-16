@@ -91,7 +91,6 @@ function buildEvolutionGlobaleCumulativeCateg(tab, colonneSerie)
   for (var i = 0; i < tab.length; i++)
   {
     var tmpDate = new Date(tab[i][IDX_DATE].getTime());
-    //tmpDate.setHours(0,0,0,0);
     var maSerie = tab[i][colonneSerie];
 
     if (!(maSerie in tabNbEvent)) tabNbEvent[maSerie] = 0;
@@ -234,7 +233,7 @@ function BuildRecurrenceHeureMois(tab, idxColonne)
     if (!tabCateg.includes(tmpCateg)) tabCateg.push(tmpCateg);
 
     var jour = date.getDate();
-    var heure = date.getHours();
+    var heure = date.getHours() + (date.getMinutes() / 60);
 
     if (!(jour in tmpdata)) tmpdata[jour] = {};
     if (!(heure in tmpdata[jour])) tmpdata[jour][heure] = {};
@@ -258,7 +257,7 @@ function BuildRecurrenceHeureMois(tab, idxColonne)
           "title": categ,
           "color": tmpdata[jour][heure][categ].color,
           "x": parseInt(jour),
-          "y": parseInt(heure),
+          "y": parseFloat(heure),
           "value": parseInt(tmpdata[jour][heure][categ].value)
         });
       }

@@ -308,16 +308,6 @@ function GraphEvolutionGlobaleCateg(data)
 }
 
 
-
-
-
-
-
-
-
-
-
-
 function GraphEvolutionGlobaleCumulativeCateg(data)
 {
   if (idxColonne == -1) return;
@@ -432,19 +422,6 @@ function GraphEvolutionGlobaleCumulativeCateg(data)
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 function GraphElementsActifs(data)
 {
   var container = document.getElementById("chart4");
@@ -532,7 +509,7 @@ function GraphRecurrenceHeureJour(data)
   }));
 
   var yRenderer = am5radar.AxisRendererRadial.new(root, {
-    visible: false,
+    visible: true,
     axisAngle: 90,
     minGridDistance: 10,
     inversed: true
@@ -544,7 +521,7 @@ function GraphRecurrenceHeureJour(data)
     radius: -8
   });
 
-  yRenderer.grid.template.set("visible", false);
+  yRenderer.grid.template.set("visible", true);
 
   var yAxis = chart.yAxes.push(am5xy.CategoryAxis.new(root, {
     maxDeviation: 0,
@@ -553,7 +530,7 @@ function GraphRecurrenceHeureJour(data)
   }));
 
   var xRenderer = am5radar.AxisRendererCircular.new(root, {
-    visible: false,
+    visible: true,
     minGridDistance: 30
   });
 
@@ -562,7 +539,7 @@ function GraphRecurrenceHeureJour(data)
     radius: 10
   });
 
-  xRenderer.grid.template.set("visible", false);
+  xRenderer.grid.template.set("visible", true);
 
   var xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root, {
     renderer: xRenderer,
@@ -616,7 +593,7 @@ function GraphRecurrenceHeureJour(data)
     { hour: "17h" },{ hour: "18h" },{ hour: "19h" },{ hour: "20h" },{ hour: "21h" },{ hour: "22h" },
     { hour: "23h" }]);
 
-  chart.appear();
+  chart.appear(1000, 100);
 }
 
 
