@@ -44,3 +44,13 @@ stats générales
 - nb ligne totale / après filtres
 
 
+import initial
+- trouver coord NO/SE
+- rectangle à afficher
+- trouver le zoom avec la distance NO/SE ?
+
+
+import spécifique wireshark
+permettre de sélectionner 1+ colonnes en eltec
+parcourir tout le tableau, toutes les colonnes, incrémenter tous les eltecs dans le data[]
+

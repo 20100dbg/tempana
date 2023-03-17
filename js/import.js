@@ -7,6 +7,7 @@ function importerFichier()
     var filename = fileInput.files[0].name;
 
     if (filename.indexOf('CITHARE') > -1) importedData = importerCITHARE(fileReader.result);
+    else if (filename.indexOf('wireshark') > -1) importedData = importerWIRESHARK(fileReader.result);
     else if (ext == ".csv") importedData = importerCSV(fileReader.result);
     else
     {
@@ -23,6 +24,42 @@ function importerFichier()
   }
   
   fileReader.readAsText(fileInput.files[0]);
+}
+
+
+function importerWIRESHARK(txt, dateDebut)
+{
+  dateDebut = new Date();
+
+  var lines = txt.split('\n');
+  var data = [];
+  var tabPad = ["",""];
+
+  tabCriteres = lines[0].trim().split(',');
+  for (var j = 0; j < tabCriteres.length; j++) tabCriteres[j] = tabCriteres[j].replace(/^"+|"+$/g, '');
+  tabCriteres = tabPad.concat(tabCriteres.slice(1));
+  tabCriteres = buildTabCriteres(tabCriteres);
+
+  remplirSelectCriteres(tabCriteres);
+  remplirSelectFiltre(tabCriteres);
+  remplirSelectEltec(tabCriteres);
+
+  for (var i = 1; i < lines.length; i++)
+  {
+    if (lines[i] == "") continue;
+
+    var tab = lines[i].trim().split(',');
+    tab = tabPad.concat(tab.slice(1));
+
+    for (var j = 0; j < tab.length; j++) tab[j] = tab[j].replace(/^"+|"+$/g, '');
+
+    var time = parseFloat(tab[IDX_DATE]) + dateDebut.getTime();
+    tab[IDX_DATE] = new Date(time);
+    data.push(tab);
+  }
+
+  console.log(data);
+  return data;
 }
 
 
@@ -47,7 +84,7 @@ function importerCITHARE(txt)
 
     for (var j = 0; j < tab.length; j++) tab[j] = tab[j].replace(/^"+|"+$/g, '');
 
-    tab[2] = convertirDate(tab[2]);
+    tab[IDX_DATE] = convertirDate(tab[IDX_DATE]);
     data.push(tab);
   }
 

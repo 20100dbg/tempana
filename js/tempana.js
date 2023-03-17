@@ -6,6 +6,7 @@ var tabCriteres = [];
 var offsetColonne = 3;
 var idxColonne = -1;
 var idxColonneEltec = -1;
+var tabColonneEltec = [];
 var idxUniteTemps = 0;
 
 var startDateGlobal = 0;
@@ -34,7 +35,13 @@ function changeUniteTemps(obj)
 
 function selectColonneEltec(obj)
 {
-  idxColonneEltec = obj.value;
+  tabColonneEltec = [];
+
+  for (var i = 0; i < obj.options.length; i++)
+    if (obj.options[i].selected)
+      tabColonneEltec.push(obj.options[i].value);
+
+  //idxColonneEltec = obj.value;
 }
 
 

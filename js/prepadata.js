@@ -158,9 +158,13 @@ function buildElementsActifs(tab)
 
   for (var i = 0; i < tab.length; i++)
   {
-    var col = tab[i][idxColonneEltec];
-    if (!(col in tmpdata)) tmpdata[col] = 1;
-    else tmpdata[col] += 1;
+    for (var j = 0; j < tabColonneEltec.length; j++)
+    {
+      var col = tab[i][tabColonneEltec[j]];
+      if (!(col in tmpdata)) tmpdata[col] = 1;
+      else tmpdata[col] += 1;
+    }
+
   }
 
   for (var eltec in tmpdata)
