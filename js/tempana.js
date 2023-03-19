@@ -1,4 +1,6 @@
 var tabUniteTemps = ["annee", "mois", "semaine", "jour", "heure" ];
+var uniteTemps = "day";
+//day
 var tabCouleur = [ "#ff0000", "#ffff00", "#00ff00", "#0080ff", "#ff80c0", "#00ffff", "#004080", "#008000", "#ff8000", "#804000", "#acac59", "#950095", "#c0c0c0"];
 var tabValeursCriteres = [];
 var tabCriteres = [];
@@ -7,7 +9,7 @@ var offsetColonne = 3;
 var idxColonne = -1;
 var idxColonneEltec = -1;
 var tabColonneEltec = [];
-var idxUniteTemps = 0;
+var idxUnitePeriode = 0;
 
 var startDateGlobal = 0;
 var endDateGlobal = 0;
@@ -28,9 +30,14 @@ function changeCritere(obj)
   idxColonne = obj.value;
 }
 
+function changeUnitePeriode(obj)
+{
+  idxUnitePeriode = obj.value;
+}
+
 function changeUniteTemps(obj)
 {
-  idxUniteTemps = obj.value;
+  uniteTemps = obj.value;
 }
 
 function selectColonneEltec(obj)
@@ -65,7 +72,8 @@ function remplirSelectFiltre(tabCriteres)
 function remplirSelectEltec(tabCriteres)
 {
   var div = document.getElementById('eltec');
-  div.innerHTML = '<option value="-1">Choix eltec</option>';
+  div.innerHTML = '';
+  //div.innerHTML = '<option value="-1">Choix eltec</option>';
   for (var i = 0; i < tabCriteres.length; i++)  
     div.innerHTML += '<option value="'+ (i + offsetColonne) +'">' + tabCriteres[i] + '</options>';
 }
@@ -108,7 +116,11 @@ function appliquerFiltre()
 
 function FiltrePeriode(data)
 {
-  const [startPeriode, endPeriode] = ExtrairePeriode();
+  const fromSlider = document.querySelector('#fromSlider');
+  const toSlider = document.querySelector('#toSlider');
+  const [from, to] = getParsed(fromSlider, toSlider);
+
+  const [startPeriode, endPeriode] = ExtrairePeriode(from, to);
   startDatePeriode = startPeriode;
   endDatePeriode = endPeriode;
 
@@ -180,24 +192,23 @@ function creerTabFiltres()
 }
 
 
-function updatePeriode(fromSlider, toSlider)
+function AfficherPeriode()
 {
-  const [startPeriode, endPeriode] = ExtrairePeriode();
-  startDatePeriode = startPeriode;
-  endDatePeriode = endPeriode;
-
   document.getElementById('infoSlider').innerHTML = 
-  'Global : ' + startDateGlobal.toUTCString() + ' - ' + endDateGlobal.toUTCString() + '<br>' +
-  'Periode : ' + startDatePeriode.toUTCString() + ' - ' +  endDatePeriode.toUTCString();
+  'Global : ' + startDateGlobal.toLocaleString() + ' - ' + endDateGlobal.toLocaleString() + '<br>' +
+  'Periode : ' + startDatePeriode.toLocaleString() + ' - ' +  endDatePeriode.toLocaleString();
 }
 
-
-function ExtrairePeriode()
+function updatePeriode(fromSlider, toSlider)
 {
-  const fromSlider = document.querySelector('#fromSlider');
-  const toSlider = document.querySelector('#toSlider');
   const [from, to] = getParsed(fromSlider, toSlider);
+  const [startPeriode, endPeriode] = ExtrairePeriode(from, to);
+  startDatePeriode = startPeriode;
+  endDatePeriode = endPeriode;
+}
 
+function ExtrairePeriode(from, to)
+{
   var diff = endDateGlobal - startDateGlobal;
   var startDatePeriode = startDateGlobal.getTime() + (from * diff / 100);
   var endDatePeriode = startDateGlobal.getTime() + (to * diff / 100);

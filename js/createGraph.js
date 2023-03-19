@@ -20,7 +20,7 @@ function GraphEvolutionGlobale(data)
   var xAxis = chart.xAxes.push(
     am5xy.DateAxis.new(root, {
       maxDeviation: 0,
-      baseInterval: { timeUnit: "day", count: 1 },
+      baseInterval: { timeUnit: uniteTemps, count: 1 },
       renderer: am5xy.AxisRendererX.new(root, {
         minGridDistance: 30
       })
@@ -50,7 +50,8 @@ function GraphEvolutionGlobale(data)
   var tooltip = series.set("tooltip", am5.Tooltip.new(root, {}));
   tooltip.label.set("text", "{valueY}");
 
-  data = buildEvolutionGlobale(data); //getCITHARE()
+  data = buildEvolutionGlobale(data);
+  
   series.data.setAll(data);
 
   series.appear();
@@ -79,7 +80,7 @@ function GraphEvolutionGlobaleCumulative(data)
   var xAxis = chart.xAxes.push(am5xy.DateAxis.new(root, {
     maxDeviation: 0.5,
     baseInterval: {
-      timeUnit: "day",
+      timeUnit: uniteTemps,
       count: 1
     },
     renderer: am5xy.AxisRendererX.new(root, { pan:"zoom" }),
@@ -116,7 +117,7 @@ function GraphEvolutionPeriodeCateg(data)
   var root = am5.Root.new(container);
   root.setThemes([ am5themes_Kelly.new(root) ]);
 
-  data = buildEvolutionCateg(data, idxColonne, idxUniteTemps);
+  data = buildEvolutionCateg(data, idxColonne, idxUnitePeriode);
 
   var chart = root.container.children.push(am5xy.XYChart.new(root, {
     panX: false,
@@ -214,7 +215,7 @@ function GraphEvolutionGlobaleCateg(data)
     am5xy.DateAxis.new(root, {
       maxDeviation: 0,
       baseInterval: {
-        timeUnit: "day",
+        timeUnit: uniteTemps,
         count: 1
       },
       renderer: am5xy.AxisRendererX.new(root, {}),
@@ -330,7 +331,7 @@ function GraphEvolutionGlobaleCumulativeCateg(data)
     am5xy.DateAxis.new(root, {
       maxDeviation: 0,
       baseInterval: {
-        timeUnit: "day",
+        timeUnit: uniteTemps,
         count: 1
       },
       renderer: am5xy.AxisRendererX.new(root, {}),

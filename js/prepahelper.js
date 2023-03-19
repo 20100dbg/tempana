@@ -49,35 +49,56 @@ function ConvDateFromExcel(val)
 }
 
 
-function getDate(val, uniteTemps)
+function getDate(val, unitePeriode)
 {
-  //annee, mois, semaine, jour, heure
-  if (uniteTemps == 0) return val.getFullYear();
-  else if (uniteTemps == 1) return val.getFullYear() + '-' + (val.getMonth() + 1);
-  else if (uniteTemps == 2) return val.getFullYear() + '-' + val.getWeek();
-  else if (uniteTemps == 3) return val.toLocaleDateString();
-  else if (uniteTemps == 4) return val.toLocaleDateString() + " " + val.getHours();
+  if (unitePeriode == 0) return val.getFullYear();
+  else if (unitePeriode == 1) return val.getFullYear() + '-' + (val.getMonth() + 1);
+  else if (unitePeriode == 2) return val.getFullYear() + '-' + val.getWeek();
+  else if (unitePeriode == 3) return val.toLocaleDateString();
+  else if (unitePeriode == 4) return val.toLocaleDateString() + " " + val.getHours();
+  else if (unitePeriode == 5) return val.toLocaleDateString() + " " + val.getHours() + " " + val.getMinutes();
+  else if (unitePeriode == 6) return val.toLocaleString();
+  else if (unitePeriode == 7) return val.toISOString();
 }
 
 
 function getMinDate(tab)
 {
-  var min = new Date(2999, 11, 31);
+  var min = new Date(2999, 11, 31).getTime();
   for (var i = 0; i < tab.length; i++)
   {
-    var tmpDate = tab[i][IDX_DATE]; //new Date(ConvDateFromExcel(tab[i][0]));
-    if (min.getTime() > tmpDate.getTime()) min = tmpDate;
+    var tmpDate = tab[i][IDX_DATE].getTime();
+    if (min > tmpDate) min = tmpDate;
   }
-  return min;
+  return new Date(min);
 }
 
 function getMaxDate(tab)
 {
-  var max = new Date(0, 0, 1);
+  var max = new Date(0, 0, 1).getTime();
   for (var i = 0; i < tab.length; i++)
   {
-    var tmpDate = tab[i][IDX_DATE]; //new Date(ConvDateFromExcel(tab[i][0]));
-    if (max.getTime() < tmpDate.getTime()) max = tmpDate;
+    var tmpDate = tab[i][IDX_DATE].getTime();
+    if (max < tmpDate) max = tmpDate;
   }
-  return max;
+  return new Date(max);
+}
+
+function getTruncatedDate(date)
+{
+  var sdate = '';
+  if (uniteTemps == 'year') sdate += date.getFullYear() + '-01-01 00:00:00';
+  else if (uniteTemps == 'month') sdate += date.getFullYear() + '-' + (date.getMonth()+1) + '-01 00:00:00';
+  else if (uniteTemps == 'week')
+  {
+    date = new Date(date.setDate(date.getDate() - date.getDay()));
+    sdate += date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate() +' 00:00:00';
+  }
+  else if (uniteTemps == 'day') sdate += date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate() +' 00:00:00';
+  else if (uniteTemps == 'hour') sdate += date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate() +' ' + date.getHours() + ':00:00';
+  else if (uniteTemps == 'minute') sdate += date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate() +' ' + date.getHours() + ':'+ date.getMinutes() +':00';
+  else if (uniteTemps == 'second') sdate += date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate() +' ' + date.getHours() + ':'+ date.getMinutes() +':' + date.getSeconds();
+  else sdate = date.getTime();
+
+  return new Date(sdate);
 }

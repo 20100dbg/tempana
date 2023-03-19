@@ -45,6 +45,7 @@ function generateDatas(count) {
   for (var i = 0; i < count; ++i) {
     data.push(generateData());
   }
+  console.log(data);
   return data;
 }
 

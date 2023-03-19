@@ -53,14 +53,33 @@
       Colonne eltec <select id="eltec" multiple onchange="selectColonneEltec(this);"></select><br>
       </div>
       <div class="col">
-      Regrouper par <select id="uniteTemps" onchange="changeUniteTemps(this);">
+      Regrouper par <select id="unitePeriode" onchange="changeUnitePeriode(this);">
         <option value="0">Annee</option>
-        <option value="1">Mois</option>
+        <option value="1" selected>Mois</option>
         <option value="2">Semaine</option>
         <option value="3">Jour</option>
         <option value="4">Heure</option>
+        <option value="5">Minute</option>
+        <option value="6">Seconde</option>
+        <option value="7">Millisecondes</option>
       </select>
       </div>
+
+      <div class="col">
+      Unite de temps <select id="uniteTemps" onchange="changeUniteTemps(this);">
+        <option value="year">Annee</option>
+        <option value="month">Mois</option>
+        <option value="week">Semaine</option>
+        <option value="day" selected>Jour</option>
+        <option value="hour">Heure</option>
+        <option value="minute">Minute</option>
+        <option value="second">Seconde</option>
+        <option value="millisecond">Millisecondes</option>
+      </select>
+      </div>
+
+      
+
       </div>
       </div>
 
@@ -181,7 +200,7 @@ function creerFiltreEtGraphiques()
 {
   viderGraphiques();
   appliquerFiltre();
-  creerGraphiques();  
+  creerGraphiques();
 }
 
 function creerGraphiques()
@@ -193,8 +212,11 @@ function creerGraphiques()
   for (var i = 0; i < divs.length; i++) divs[i].innerHTML = nomCateg;
 
   var divEltec = document.getElementById('eltec');
-  var nomEltec = 'Pas de colonne sélectionnée !';
-  if (divEltec.selectedIndex > 0) nomEltec = divEltec.item(divEltec.selectedIndex).text;
+  var nomEltec = '';
+  for (var i = 0; i < divEltec.options.length; i++)
+    if (divEltec.options[i].selected) nomEltec += divEltec.options[i].text + ',';
+  if (nomEltec == '') nomEltec = 'Pas de colonne sélectionnée !';
+
   var divs = document.querySelectorAll('.nomEltec');
   for (var i = 0; i < divs.length; i++) divs[i].innerHTML = nomEltec;
 
@@ -213,7 +235,7 @@ function creerGraphiques()
 function viderGraphiques()
 {
   for (var i = am5.registry.rootElements.length - 1; i >= 0; i--)
-    am5.registry.rootElements[i].dispose()
+    am5.registry.rootElements[i].dispose();
 }
 
 window.onload = function() {

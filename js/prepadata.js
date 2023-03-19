@@ -1,26 +1,26 @@
-
 function buildEvolutionGlobale(tab)
 {
   var data = [];
+  var tmpdata = {};
 
   for (var i = 0; i < tab.length; i++)
   {
-    var tmpDate = new Date(tab[i][IDX_DATE].getTime());
-    tmpDate.setHours(0,0,0,0);
+    var tmpDate = getTruncatedDate(tab[i][IDX_DATE]);
+    tmpDate = tmpDate.getTime();
 
-    var flag = false;
-    for (var j = 0; j < data.length && !flag; j++) {
-      if (data[j].date == tmpDate.getTime()) {
-        flag = true;
-        data[j].value += 1;
-      }
-    }
+    if (!(tmpDate in tmpdata)) tmpdata[tmpDate] = 0;
+    tmpdata[tmpDate] += 1;
+  }
 
-    if (!flag) data.push({ date: tmpDate.getTime(), value: 1 });
+  for (var tmpDate in tmpdata)
+  {
+    data.push({ date: parseInt(tmpDate), value: tmpdata[tmpDate] });
   }
 
   return data;
 }
+
+
 
 function buildEvolutionGlobaleCumulative(tab)
 {
@@ -30,15 +30,15 @@ function buildEvolutionGlobaleCumulative(tab)
 
   for (var i = 0; i < tab.length; i++)
   {
-    var tmpDate = new Date(tab[i][IDX_DATE].getTime());
-    tmpDate.setHours(0,0,0,0);
+    var tmpDate = getTruncatedDate(tab[i][IDX_DATE]);
+    tmpDate = tmpDate.getTime();
     
     if (i == 0) lastDate = tmpDate;
     nbEvent += 1;
 
-    if (lastDate != tmpDate)
+    if (lastDate != tmpDate || i == tab.length - 1)
     {
-      data.push({ date: tmpDate.getTime(), value: nbEvent });
+      data.push({ date: tmpDate, value: nbEvent });
       lastDate = tmpDate;
     }
   }
@@ -48,14 +48,14 @@ function buildEvolutionGlobaleCumulative(tab)
 
 
 
-function buildEvolutionCateg(tab, colonneSerie, uniteTemps)
+function buildEvolutionCateg(tab, colonneSerie, unitePeriode)
 {
   tabSerie = buildTabValeurs(tab, colonneSerie)
   var data = [];
 
   for (var i = 0; i < tab.length; i++)
   {
-    var tmpDate = getDate(tab[i][IDX_DATE], uniteTemps);
+    var tmpDate = getDate(tab[i][IDX_DATE], unitePeriode);
     
     var flag = false;
     for (var j = 0; j < data.length && !flag; j++) {
@@ -74,6 +74,7 @@ function buildEvolutionCateg(tab, colonneSerie, uniteTemps)
       data.push(tmpObj);
     }
   }
+
   data.sort(function(a,b) { return a.date > b.date });
 
   return data;
@@ -111,10 +112,18 @@ function buildEvolutionGlobaleCateg(tab, colonneSerie)
   var data = {};
   tabSerie = buildTabValeurs(tab, colonneSerie);
 
-  var startDate = getMinDate(tab);
-  startDate = startDate.setHours(0,0,0,0);
-  var endDate = getMaxDate(tab);
-  endDate = endDate.setHours(0,0,0,0);
+  var startDate = getTruncatedDate(tab[0][IDX_DATE]).getTime();
+  var endDate = getTruncatedDate(tab[tab.length - 1][IDX_DATE]).getTime();
+  //endDate = endDate.setHours(0,0,0,0);
+  var ecartTemps = 0;
+  if (uniteTemps == 'year') ecartTemps = 31536000000;
+  else if (uniteTemps == 'month') ecartTemps = 2592000000;
+  else if (uniteTemps == 'week') ecartTemps = 604800000;
+  else if (uniteTemps == 'day') ecartTemps = 86400000;
+  else if (uniteTemps == 'hour') ecartTemps = 3600000;
+  else if (uniteTemps == 'minute') ecartTemps = 60000;
+  else if (uniteTemps == 'second') ecartTemps = 1000;
+  else if (uniteTemps == 'millisecond') ecartTemps = 0;
 
   for (var i = 0; i < tabSerie.length; i++)
   {
@@ -125,26 +134,26 @@ function buildEvolutionGlobaleCateg(tab, colonneSerie)
     while (date < endDate)
     {
       data[maSerie].push({date: date, value: 0});
-      date += 86400000;
+      date += ecartTemps;
     }
   }
 
   for (var i = 0; i < tab.length; i++)
   {
-    var tmpDate = new Date(tab[i][IDX_DATE].getTime());
-    tmpDate.setHours(0,0,0,0);
+    var tmpDate = getTruncatedDate(tab[i][IDX_DATE]).getTime();
+    // new Date(tab[i][IDX_DATE].getTime());
+    //tmpDate.setHours(0,0,0,0);
     var maSerie = tab[i][colonneSerie];
 
     var found = false;
     for (var j = 0; j < data[maSerie].length && !found; j++)
     {
-      if (data[maSerie][j]["date"] == tmpDate.getTime())
+      if (data[maSerie][j]["date"] == tmpDate)
       {
         data[maSerie][j].value += 1;
         found = true;
       }
     }
-
   }
 
   return data;

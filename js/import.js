@@ -5,6 +5,7 @@ function importerFichier()
 
   fileReader.onload = function (e) {
     var filename = fileInput.files[0].name;
+    var ext = filename.substring(filename.lastIndexOf('.'));
 
     if (filename.indexOf('CITHARE') > -1) importedData = importerCITHARE(fileReader.result);
     else if (filename.indexOf('wireshark') > -1) importedData = importerWIRESHARK(fileReader.result);
@@ -16,11 +17,20 @@ function importerFichier()
     }
 
     importedData.sort(function(a,b) { return a[IDX_DATE] > b[IDX_DATE] });
+    //startDateGlobal = getMinDate(importedData);
+    //endDateGlobal = getMaxDate(importedData);
+    
+    startDateGlobal = importedData[0][IDX_DATE];
+    endDateGlobal = importedData[importedData.length - 1][IDX_DATE];
 
-    startDateGlobal = getMinDate(importedData);
-    endDateGlobal = getMaxDate(importedData);
+    const fromSlider = document.querySelector('#fromSlider');
+    const toSlider = document.querySelector('#toSlider');
+    updatePeriode(fromSlider, toSlider);
+    AfficherPeriode();
+
     buildBandeau(importedData);
     workingData = importedData;
+
   }
   
   fileReader.readAsText(fileInput.files[0]);
@@ -57,7 +67,8 @@ function importerWIRESHARK(txt)
 
     for (var j = 0; j < tab.length; j++) tab[j] = tab[j].replace(/^"+|"+$/g, '');
 
-    var time = parseFloat(tab[IDX_DATE]) + dateDebut.getTime();
+    var tmp = parseFloat(tab[IDX_DATE]);
+    var time = dateDebut.getTime() + (tmp * 1000);
     tab[IDX_DATE] = new Date(time);
     data.push(tab);
   }
