@@ -43,8 +43,16 @@
   </div>
   <div class="row">
     <div class="col cadre">
+
+      <div class="container">
+      <div class="row">
+      <div class="col">
       Colonne étudiée <select id="categ" onchange="changeCritere(this);"></select><br>
+      </div>
+      <div class="col">
       Colonne eltec <select id="eltec" multiple onchange="selectColonneEltec(this);"></select><br>
+      </div>
+      <div class="col">
       Regrouper par <select id="uniteTemps" onchange="changeUniteTemps(this);">
         <option value="0">Annee</option>
         <option value="1">Mois</option>
@@ -52,18 +60,26 @@
         <option value="3">Jour</option>
         <option value="4">Heure</option>
       </select>
+      </div>
+      </div>
+      </div>
+
       <br>
       <br>
+      <!--
       <button onclick="appliquerFiltre();">Appliquer les filtres</button> - <button onclick="supprimerFiltre();">Supprimer les filtres</button><br>
       <button onclick="creerGraphiques();">Créer les graphiques</button> - <button onclick="viderGraphiques();">Vider les graphiques</button><br>
-
+      -->
   </div>
 </div>
 </div>
 
+<button class="btn btn-primary" type="button" onclick="creerFiltreEtGraphiques();">Créer les graphiques</button>
 <br>
+<!--
 <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#divGlobale">Evolution & récurrence globales</button>
 <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#divCateg">Evolution & récurrence de la catégorie</button>
+-->
 <br>
 
 <div class="container-fluid" id="divGlobale">
@@ -151,15 +167,22 @@
 <script src="js/bootstrap.min.js"></script>
 <script src="js/bootstrap.bundle.min.js"></script>
 
+<script src="js/createGraph.js"></script>
 <script src="js/tempana.js"></script>
 <script src="js/import.js"></script>
 <script src="js/prepahelper.js"></script>
 <script src="js/prepadata.js"></script>
-<script src="js/createGraph.js"></script>
 <script src="js/slider.js"></script>
 
 <script>
 var importedData, workingData;
+
+function creerFiltreEtGraphiques()
+{
+  viderGraphiques();
+  appliquerFiltre();
+  creerGraphiques();  
+}
 
 function creerGraphiques()
 {

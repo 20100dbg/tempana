@@ -27,9 +27,13 @@ function importerFichier()
 }
 
 
-function importerWIRESHARK(txt, dateDebut)
+function importerWIRESHARK(txt)
 {
-  dateDebut = new Date();
+  var d = new Date().toJSON().replace('T', ' ').substring(0, 19);
+  var s = prompt('Indiquer la date/heure de début de la capture.\nFormat : yyyy-mm-dd hh:mm:ss', d);
+  dateDebut = new Date(s);
+  if (dateDebut == "Invalid Date") dateDebut = new Date();
+  
 
   var lines = txt.split('\n');
   var data = [];

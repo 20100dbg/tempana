@@ -34,7 +34,7 @@ function GraphEvolutionGlobale(data)
     am5xy.ValueAxis.new(root, { renderer: am5xy.AxisRendererY.new(root, {}) })
   );
 
-  xAxis.set("tooltip", am5.Tooltip.new(root, {}))
+  xAxis.set("tooltip", am5.Tooltip.new(root, {}));
 
   var series = chart.series.push(
       am5xy.ColumnSeries.new(root, {
@@ -498,51 +498,37 @@ function GraphRecurrenceHeureJour(data)
   var root = am5.Root.new(container);
   root.setThemes([ am5themes_Animated.new(root) ]);
 
-  var chart = root.container.children.push(am5radar.RadarChart.new(root, {
-    innerRadius: am5.percent(50),
-    panX: false,
-    panY: false,
-    wheelX: "panX",
-    wheelY: "zoomX",
+  var chart = root.container.children.push(
+    am5radar.RadarChart.new(root, {
+    innerRadius: am5.percent(30),
     maxTooltipDistance: 0,
     layout: root.verticalLayout
   }));
 
-  var yRenderer = am5radar.AxisRendererRadial.new(root, {
-    visible: true,
-    axisAngle: 90,
-    minGridDistance: 10,
-    inversed: true
-  });
 
-  yRenderer.labels.template.setAll({
-    textType: "circular",
-    textAlign: "center",
-    radius: -8
-  });
+var yRenderer = am5radar.AxisRendererRadial.new(root, {
+  visible: false,
+  axisAngle: 90,
+  minGridDistance: 10,
+  inversed: true
+});
 
-  yRenderer.grid.template.set("visible", true);
+yRenderer.labels.template.setAll({
+  textType: "circular",
+  textAlign: "center",
+  radius: -8
+});
 
   var yAxis = chart.yAxes.push(am5xy.CategoryAxis.new(root, {
-    maxDeviation: 0,
     renderer: yRenderer,
     categoryField: "weekday"
   }));
 
-  var xRenderer = am5radar.AxisRendererCircular.new(root, {
-    visible: true,
-    minGridDistance: 30
-  });
-
-  xRenderer.labels.template.setAll({
-    textType: "circular",
-    radius: 10
-  });
-
-  xRenderer.grid.template.set("visible", true);
-
   var xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root, {
-    renderer: xRenderer,
+    renderer: am5radar.AxisRendererCircular.new(root, {
+      visible: false,
+      minGridDistance: 30
+    }),
     categoryField: "hour"
   }));
 
@@ -559,18 +545,6 @@ function GraphRecurrenceHeureJour(data)
 
   series.columns.template.setAll({
     tooltipText: "{value}",
-    strokeOpacity: 1,
-    strokeWidth: 2,
-    width: am5.percent(100),
-    height: am5.percent(100)
-  });
-
-
-  series.columns.template.events.on("pointerover", function (event) {
-    var di = event.target.dataItem ;
-    if (di) {
-      //heatLegend.showValue(di.get("value", 0) );
-    }
   });
 
   series.set("heatRules", [{
@@ -582,7 +556,6 @@ function GraphRecurrenceHeureJour(data)
   }]);
 
   data = BuildRecurrenceHeureJour(data);
-
 
   series.data.setAll(data);
   yAxis.data.setAll([{ weekday: "Lundi" },{ weekday: "Mardi" },{ weekday: "Mercredi" },
