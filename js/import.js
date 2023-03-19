@@ -62,7 +62,6 @@ function importerWIRESHARK(txt)
     data.push(tab);
   }
 
-  console.log(data);
   return data;
 }
 
@@ -89,6 +88,9 @@ function importerCITHARE(txt)
     for (var j = 0; j < tab.length; j++) tab[j] = tab[j].replace(/^"+|"+$/g, '');
 
     tab[IDX_DATE] = convertirDate(tab[IDX_DATE]);
+    var x = tab[IDX_LAT];
+    tab[IDX_LAT] = tab[IDX_LNG];
+    tab[IDX_LNG] = x;
     data.push(tab);
   }
 
