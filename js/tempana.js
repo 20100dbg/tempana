@@ -26,6 +26,21 @@ var IDX_LAT = 0;
 var IDX_LNG = 1;
 var IDX_DATE = 2;
 
+function resetCanvas()
+{
+  var c = document.getElementById("bandeau");
+  var ctx = c.getContext("2d");
+  ctx.clearRect(0,0,c.width,c.height);
+}
+
+function resetCriteres()
+{
+  idxColonne = -1;
+  idxColonneEltec = -1;
+  tabColonneEltec = [];
+  resetCanvas();
+}
+
 function changeCritere(obj)
 {
   idxColonne = obj.value;

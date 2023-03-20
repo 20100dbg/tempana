@@ -18,6 +18,7 @@ function importerFichierEvent()
 
 function importerFichier(file)
 {
+  resetCriteres();
   var fileReader = new FileReader();
 
   fileReader.onload = function (e)
