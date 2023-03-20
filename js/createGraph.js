@@ -10,7 +10,8 @@ function GraphEvolutionGlobale(data)
       panX: false,
       panY: false,
       wheelX: "panX",
-      wheelY: "zoomX"
+      wheelY: "zoomX",
+      columnWidth: 0.5
     })
   );
 
@@ -19,10 +20,8 @@ function GraphEvolutionGlobale(data)
 
   var xAxis = chart.xAxes.push(
     am5xy.DateAxis.new(root, {
-      maxDeviation: 0,
-      baseInterval: { timeUnit: uniteTemps, count: 1 },
+      baseInterval: { timeUnit: uniteTemps, count: nbUniteTemps },
       renderer: am5xy.AxisRendererX.new(root, {
-        minGridDistance: 30
       })
     })
   );
@@ -81,7 +80,7 @@ function GraphEvolutionGlobaleCumulative(data)
     maxDeviation: 0.5,
     baseInterval: {
       timeUnit: uniteTemps,
-      count: 1
+      count: nbUniteTemps
     },
     renderer: am5xy.AxisRendererX.new(root, { pan:"zoom" }),
     tooltip: am5.Tooltip.new(root, {})
@@ -216,7 +215,7 @@ function GraphEvolutionGlobaleCateg(data)
       maxDeviation: 0,
       baseInterval: {
         timeUnit: uniteTemps,
-        count: 1
+        count: nbUniteTemps
       },
       renderer: am5xy.AxisRendererX.new(root, {}),
       tooltip: am5.Tooltip.new(root, {})
@@ -332,7 +331,7 @@ function GraphEvolutionGlobaleCumulativeCateg(data)
       maxDeviation: 0,
       baseInterval: {
         timeUnit: uniteTemps,
-        count: 1
+        count: nbUniteTemps
       },
       renderer: am5xy.AxisRendererX.new(root, {}),
       tooltip: am5.Tooltip.new(root, {})

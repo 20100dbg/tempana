@@ -114,7 +114,7 @@ function buildEvolutionGlobaleCateg(tab, colonneSerie)
 
   var startDate = getTruncatedDate(tab[0][IDX_DATE]).getTime();
   var endDate = getTruncatedDate(tab[tab.length - 1][IDX_DATE]).getTime();
-  //endDate = endDate.setHours(0,0,0,0);
+
   var ecartTemps = 0;
   if (uniteTemps == 'year') ecartTemps = 31536000000;
   else if (uniteTemps == 'month') ecartTemps = 2592000000;
@@ -131,7 +131,7 @@ function buildEvolutionGlobaleCateg(tab, colonneSerie)
     var maSerie = tabSerie[i];
     data[maSerie] = [];
 
-    while (date < endDate)
+    while (date <= endDate)
     {
       data[maSerie].push({date: date, value: 0});
       date += ecartTemps;
@@ -141,8 +141,6 @@ function buildEvolutionGlobaleCateg(tab, colonneSerie)
   for (var i = 0; i < tab.length; i++)
   {
     var tmpDate = getTruncatedDate(tab[i][IDX_DATE]).getTime();
-    // new Date(tab[i][IDX_DATE].getTime());
-    //tmpDate.setHours(0,0,0,0);
     var maSerie = tab[i][colonneSerie];
 
     var found = false;
@@ -186,7 +184,6 @@ function buildElementsActifs(tab)
   });
 
   data = data.slice(0,10);
-
   return data;
 }
 

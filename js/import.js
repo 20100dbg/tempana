@@ -1,10 +1,28 @@
-function importerFichier()
+function dropHandler(ev)
+{
+  ev.preventDefault();
+  if (ev.dataTransfer.items)
+    importerFichier(ev.dataTransfer.files[0]);
+}
+
+function dragOverHandler(ev) { ev.preventDefault(); }
+
+
+function importerFichierEvent()
 {
   var fileInput = document.getElementById('fileInput');
+  if (fileInput.files)
+    importerFichier(fileInput.files[0]);
+}
+
+
+function importerFichier(file)
+{
   var fileReader = new FileReader();
 
-  fileReader.onload = function (e) {
-    var filename = fileInput.files[0].name;
+  fileReader.onload = function (e)
+  {
+    var filename = file.name;
     var ext = filename.substring(filename.lastIndexOf('.'));
 
     if (filename.indexOf('CITHARE') > -1) importedData = importerCITHARE(fileReader.result);
@@ -30,10 +48,9 @@ function importerFichier()
 
     buildBandeau(importedData);
     workingData = importedData;
-
   }
+  fileReader.readAsText(file);
   
-  fileReader.readAsText(fileInput.files[0]);
 }
 
 
@@ -41,7 +58,9 @@ function importerWIRESHARK(txt)
 {
   var d = new Date().toJSON().replace('T', ' ').substring(0, 19);
   var s = prompt('Indiquer la date/heure de début de la capture.\nFormat : yyyy-mm-dd hh:mm:ss', d);
-  dateDebut = new Date(s);
+  
+  if (s == null) dateDebut = new Date(d);
+  else dateDebut = new Date(s);
   if (dateDebut == "Invalid Date") dateDebut = new Date();
   
 

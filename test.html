@@ -1,0 +1,48 @@
+<style>
+  #drop_zone {
+  border: 5px solid blue;
+  width: 200px;
+  height: 100px;
+}
+
+</style>
+
+<div id="drop_zone" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+  <p>Drag one or more files to this <i>drop zone</i>.</p>
+</div>
+
+
+<script type="text/javascript">
+
+function zou(file)
+{
+ var fileReader = new FileReader();
+
+  fileReader.onload = function (e) {
+    var filename = file.name;
+    console.log(filename);
+    console.log(fileReader.result);
+  }
+
+  fileReader.readAsText(file);
+}
+
+
+function dropHandler(ev)
+{
+  ev.preventDefault();
+
+  if (ev.dataTransfer.items)
+  {
+    zou(ev.dataTransfer.files[0]);
+  }
+}
+
+
+function dragOverHandler(ev)
+{
+  ev.preventDefault();
+}
+
+
+</script>

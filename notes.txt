@@ -47,3 +47,5 @@ stats générales
 _____
 
  "millisecond", "second", "minute", "hour", "day", "week", "month", and "year".
+
+avec un xy, créer une grille heatmap pour représenter le heure/jour/mois

@@ -1,6 +1,7 @@
 var tabUniteTemps = ["annee", "mois", "semaine", "jour", "heure" ];
 var uniteTemps = "day";
-//day
+var nbUniteTemps = 1;
+
 var tabCouleur = [ "#ff0000", "#ffff00", "#00ff00", "#0080ff", "#ff80c0", "#00ffff", "#004080", "#008000", "#ff8000", "#804000", "#acac59", "#950095", "#c0c0c0"];
 var tabValeursCriteres = [];
 var tabCriteres = [];
@@ -38,6 +39,11 @@ function changeUnitePeriode(obj)
 function changeUniteTemps(obj)
 {
   uniteTemps = obj.value;
+}
+
+function changeNbUniteTemps(obj)
+{
+  nbUniteTemps = obj.value;
 }
 
 function selectColonneEltec(obj)

@@ -13,8 +13,11 @@
 
 <div class="container">
   <div class="row">
-    <div class="col cadre">
-      <input type="file" id="fileInput" onchange="importerFichier();" />
+    <div class="col cadre"
+    id="drop_zone" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+      <b><i>Glisser le fichier ici</i></b>
+
+      <!--<input type="file" id="fileInput" onchange="importerFichierEvent();" />-->
     </div>
   </div>
   <div class="row">
@@ -77,14 +80,13 @@
         <option value="millisecond">Millisecondes</option>
       </select>
       </div>
-
-      
+      <div class="col">
+      <input type="number" id="nbUniteTemps" value="1" onchange="changeNbUniteTemps(this);">
+      </div>
 
       </div>
       </div>
 
-      <br>
-      <br>
       <!--
       <button onclick="appliquerFiltre();">Appliquer les filtres</button> - <button onclick="supprimerFiltre();">Supprimer les filtres</button><br>
       <button onclick="creerGraphiques();">Créer les graphiques</button> - <button onclick="viderGraphiques();">Vider les graphiques</button><br>
@@ -117,19 +119,19 @@
     </div>
 
     <div class="col-md-4">
-      <div>Par heure par jour de la semaine</div>
+      <div>Récurrences par heure par jour de la semaine</div>
       <div id="chart5" class="chart"></div>
       <div id="chart5-controls"></div>
     </div>
 
     <div class="col-md-4">
-      <div>Par semaine dans l'année</div>
+      <div>Récurrences par semaine dans l'année</div>
       <div id="chart7" class="chart"></div>
       <div id="chart7-controls"></div>
     </div>
 
     <div class="col-md-4">
-      <div>Par jour du mois</div>
+      <div>Récurrences par jour du mois</div>
       <div id="chart8" class="chart"></div>
       <div id="chart8-controls"></div>
     </div>
