@@ -312,7 +312,7 @@ function BuildRecurrenceSemaine(tab)
 {
   var tmpdata = {}
 
-  for (var i = 0; i < 53; i++) tmpdata[i] = 0;
+  for (var i = 1; i < 54; i++) tmpdata[i] = 0;
 
   for (var i = 0; i < tab.length; i++)
   {
@@ -333,7 +333,7 @@ function BuildRecurrenceJourMois(tab)
 {
   var tmpdata = {}
 
-  for (var i = 0; i < 31; i++) tmpdata[i] = 0;
+  for (var i = 1; i < 32; i++) tmpdata[i] = 0;
 
   for (var i = 0; i < tab.length; i++)
   {

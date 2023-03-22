@@ -35,7 +35,6 @@ récurrence d'éléments individuels (type MAC)
 - données de masse
 
 
-
 stats générales
 - nombre de points par categ1, categ2
 - date moyenne
@@ -43,14 +42,12 @@ stats générales
 - date min/max globale / définie
 - nb ligne totale / après filtres
 
-
 _____
 
- "millisecond", "second", "minute", "hour", "day", "week", "month", and "year".
-
-avec un xy, créer une grille heatmap pour représenter le heure/jour/mois
-
+"millisecond", "second", "minute", "hour", "day", "week", "month", and "year".
 
 sélection de la colonne contenant le "count" pour le poids (heatmap et prob d'autres)
 
 colonnes gdh debut - gdh fin
+
+filtre geo : case à cocher "exclure les zones tracées"

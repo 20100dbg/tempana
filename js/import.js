@@ -1,21 +1,3 @@
-function dropHandler(ev)
-{
-  ev.preventDefault();
-  if (ev.dataTransfer.items)
-    importerFichier(ev.dataTransfer.files[0]);
-}
-
-function dragOverHandler(ev) { ev.preventDefault(); }
-
-
-function importerFichierEvent()
-{
-  var fileInput = document.getElementById('fileInput');
-  if (fileInput.files)
-    importerFichier(fileInput.files[0]);
-}
-
-
 function importerFichier(file)
 {
   resetCriteres();
@@ -25,6 +7,7 @@ function importerFichier(file)
   {
     var filename = file.name;
     var ext = filename.substring(filename.lastIndexOf('.'));
+    document.getElementById('nomFichierImport').innerHTML = filename;
 
     if (filename.indexOf('CITHARE') > -1) importedData = importerCITHARE(fileReader.result);
     else if (filename.indexOf('wireshark') > -1) importedData = importerWIRESHARK(fileReader.result);
@@ -39,14 +22,18 @@ function importerFichier(file)
     startDateGlobal = importedData[0][IDX_DATE];
     endDateGlobal = importedData[importedData.length - 1][IDX_DATE];
 
-    const fromSlider = document.querySelector('#fromSlider');
-    const toSlider = document.querySelector('#toSlider');
     updatePeriode(fromSlider, toSlider);
     AfficherPeriode();
 
+    DessinerPoints(importedData);
+    centrerVue(importedData);
+
     buildBandeau(importedData);
     workingData = importedData;
+
+    afficherStats();
   }
+
   fileReader.readAsText(file);
 }
 
@@ -65,13 +52,10 @@ function importerWIRESHARK(txt)
   var data = [];
   var tabPad = ["",""];
 
-  tabCriteres = lines[0].trim().split(',');
+  var tabCriteres = lines[0].trim().split(',');
   for (var j = 0; j < tabCriteres.length; j++) tabCriteres[j] = tabCriteres[j].replace(/^"+|"+$/g, '');
   tabCriteres = tabPad.concat(tabCriteres.slice(1));
-  tabCriteres = buildTabCriteres(tabCriteres);
-  remplirSelectCriteres(tabCriteres);
-  remplirSelectFiltre(tabCriteres);
-  remplirSelectEltec(tabCriteres);
+  remplirForm(tabCriteres);
 
   for (var i = 1; i < lines.length; i++)
   {
@@ -97,12 +81,9 @@ function importerCITHARE(txt)
   var lines = txt.split('\n');
   var data = [];
 
-  tabCriteres = lines[0].trim().split(';');
+  var tabCriteres = lines[0].trim().split(';');
   tabCriteres = tabCriteres.slice(0,2).concat(tabCriteres.slice(4));  
-  tabCriteres = buildTabCriteres(tabCriteres);
-  remplirSelectCriteres(tabCriteres);
-  remplirSelectFiltre(tabCriteres);
-  remplirSelectEltec(tabCriteres);
+  remplirForm(tabCriteres);
 
   for (var i = 1; i < lines.length; i++)
   {
@@ -122,6 +103,45 @@ function importerCITHARE(txt)
 
   return data;
 }
+
+
+function importerCSV(txt)
+{
+  var nbTotalLine = 0;
+  var nbLineOk = 0;
+  var data = [];
+  var lines = txt.split('\n');
+
+  var tabCriteres = lines[0].trim().split(';');
+  remplirForm(tabCriteres);
+
+
+  //saute la première ligne
+  for (var i = 1; i < lines.length; i++)
+  {
+    if (lines[i].trim() == '') continue;
+
+    var tab = lines[i].trim().split(';');
+    tab = nettoyerLigne(tab);
+
+    var date = convertirDate(tab[IDX_DATE]);
+    //var dateFin = convertirDate(tab[IDX_DATE_FIN]);
+    
+    if (date != null)
+    {
+      tab[IDX_DATE] = date;
+      //if (dateFin == null) dateFin = date;
+      //tab[IDX_DATE_FIN] = dateFin;
+
+      data.push(tab);
+      nbLineOk += 1;
+    }
+    nbTotalLine += 1;
+  }
+
+  return data;
+}
+
 
 function convertirDate(s)
 {
@@ -153,35 +173,20 @@ function nettoyerLigne(tab)
   return tab;
 }
 
-function importerCSV(txt)
+
+function dropHandler(ev)
 {
-  var nbTotalLine = 0;
-  var nbLineOk = 0;
-  var data = [];
-  var lines = txt.split('\n');
+  ev.preventDefault();
+  if (ev.dataTransfer.items)
+    importerFichier(ev.dataTransfer.files[0]);
+}
 
-  tabCriteres = buildTabCriteres(lines[0].trim().split(';'));
-  remplirSelectCriteres(tabCriteres);
-  remplirSelectFiltre(tabCriteres);
-  remplirSelectEltec(tabCriteres);
+function dragOverHandler(ev) { ev.preventDefault(); }
 
-  //saute la première ligne
-  for (var i = 1; i < lines.length; i++)
-  {
-    if (lines[i].trim() == '') continue;
 
-    var tab = lines[i].trim().split(';');
-    tab = nettoyerLigne(tab);
-
-    var date = convertirDate(tab[IDX_DATE]);
-    if (date != null)
-    {
-      tab[IDX_DATE] = date;
-      data.push(tab);
-      nbLineOk += 1;
-    }
-    nbTotalLine += 1;
-  }
-
-  return data;
+function importerFichierEvent()
+{
+  var fileInput = document.getElementById('fileInput');
+  if (fileInput.files)
+    importerFichier(fileInput.files[0]);
 }

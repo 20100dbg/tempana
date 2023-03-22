@@ -20,14 +20,13 @@ function GraphEvolutionGlobale(data)
   var xAxis = chart.xAxes.push(
     am5xy.DateAxis.new(root, {
       baseInterval: { timeUnit: uniteTemps, count: nbUniteTemps },
-      renderer: am5xy.AxisRendererX.new(root, {
-      })
+      renderer: am5xy.AxisRendererX.new(root, { })
     })
   );
-
+/*
   xAxis.get("periodChangeDateFormats")["day"] = "MMM";
   xAxis.get("dateFormats")["day"] = "dd";
-
+*/
   var yAxis = chart.yAxes.push(
     am5xy.ValueAxis.new(root, { renderer: am5xy.AxisRendererY.new(root, {}) })
   );
@@ -116,7 +115,6 @@ function GraphEvolutionPeriodeCateg(data)
   root.setThemes([ am5themes_Kelly.new(root) ]);
 
   data = buildEvolutionCateg(data, idxColonne, idxUnitePeriode);
-  //console.log(data);
 
   var chart = root.container.children.push(am5xy.XYChart.new(root, {
     panX: false,
@@ -831,8 +829,6 @@ function GraphGanttCateg(data)
 
   data = buildGanttCateg(data, idxColonne);
 
-  console.log(data);
-
   for (var i = 0; i < data.length; i++)
   {
     var idxCateg = tmptabCateg.indexOf(data[i].category);
@@ -840,8 +836,6 @@ function GraphGanttCateg(data)
       fill: am5.Color.brighten(colors.getIndex(idxCateg), 0)
     }
   }
-
-
 
   var yAxis = chart.yAxes.push(
     am5xy.CategoryAxis.new(root, {

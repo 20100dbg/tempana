@@ -1,14 +1,14 @@
 var tabUniteTemps = ["annee", "mois", "semaine", "jour", "heure" ];
+//var tabUniteTemps = ["year", "month", "week", "day", "hour", "minute", "second", "millisecond"];
+
 var uniteTemps = "day";
 var nbUniteTemps = 1;
 
 var tabCouleur = [ "#ff0000", "#ffff00", "#00ff00", "#0080ff", "#ff80c0", "#00ffff", "#004080", "#008000", "#ff8000", "#804000", "#acac59", "#950095", "#c0c0c0"];
 var tabValeursCriteres = [];
-var tabCriteres = [];
+//var tabCriteres = [];
 
-var offsetColonne = 3;
 var idxColonne = -1;
-var idxColonneEltec = -1;
 var tabColonneEltec = [];
 var idxUnitePeriode = 1;
 
@@ -17,14 +17,11 @@ var endDateGlobal = 0;
 var startDatePeriode = 0;
 var endDatePeriode = 0;
 
-var coordLatNO = 0;
-var coordLngNO = 0;
-var coordLatSE = 0;
-var coordLngSE = 0;
-
 var IDX_LAT = 0;
 var IDX_LNG = 1;
 var IDX_DATE = 2;
+var IDX_DATE_FIN = 3;
+var offsetColonne = 3;
 
 function resetCanvas()
 {
@@ -36,55 +33,49 @@ function resetCanvas()
 function resetCriteres()
 {
   idxColonne = -1;
-  idxColonneEltec = -1;
   tabColonneEltec = [];
   resetCanvas();
+  afficherStats();
 }
 
-function changeCritere(obj)
-{
-  idxColonne = obj.value;
-}
+function changeColonneCateg(obj) { idxColonne = obj.value; }
 
-function changeUnitePeriode(obj)
-{
-  idxUnitePeriode = obj.value;
-}
+function changeUnitePeriode(obj) { idxUnitePeriode = obj.value; }
 
-function changeUniteTemps(obj)
-{
-  uniteTemps = obj.value;
-}
+function changeUniteTemps(obj) { uniteTemps = obj.value; }
 
-function changeNbUniteTemps(obj)
-{
-  nbUniteTemps = obj.value;
-}
+function changeNbUniteTemps(obj) { nbUniteTemps = obj.value; }
 
-function selectColonneEltec(obj)
+function changeColonneEltec(obj)
 {
   tabColonneEltec = [];
 
   for (var i = 0; i < obj.options.length; i++)
     if (obj.options[i].selected)
       tabColonneEltec.push(obj.options[i].value);
+}
 
-  //idxColonneEltec = obj.value;
+function remplirForm(tabCriteres)
+{
+  var tabCriteres = buildTabCriteres(tabCriteres);
+  remplirSelectCategorie(tabCriteres);
+  remplirSelectFiltreColonne(tabCriteres);
+  remplirSelectEltec(tabCriteres);
 }
 
 
-function remplirSelectCriteres(tabCriteres)
+function remplirSelectCategorie(tabCriteres)
 {
-  var div = document.getElementById('categ');
-  div.innerHTML = '<option value="-1">Choix critère</option>';
+  var div = document.getElementById('selectCateg');
+  div.innerHTML = '<option value="-1">Colonne catégorie</option>';
   for (var i = 0; i < tabCriteres.length; i++)  
     div.innerHTML += '<option value="'+ (i + offsetColonne) +'">' + tabCriteres[i] + '</options>';
 }
 
 
-function remplirSelectFiltre(tabCriteres)
+function remplirSelectFiltreColonne(tabCriteres)
 {
-  var div = document.getElementById('selectFiltre');
+  var div = document.getElementById('selectFiltreColonne');
   div.innerHTML = '<option value="-1">Choix filtre</option>';
   for (var i = 0; i < tabCriteres.length; i++)  
     div.innerHTML += '<option value="'+ (i + offsetColonne) +'">' + tabCriteres[i] + '</options>';
@@ -92,7 +83,7 @@ function remplirSelectFiltre(tabCriteres)
 
 function remplirSelectEltec(tabCriteres)
 {
-  var div = document.getElementById('eltec');
+  var div = document.getElementById('selectEltec');
   div.innerHTML = '';
   //div.innerHTML = '<option value="-1">Choix eltec</option>';
   for (var i = 0; i < tabCriteres.length; i++)  
@@ -124,12 +115,13 @@ function ajouterFormFiltre(obj)
   for (var i = 0; i < tabValAttribut.length; i++)
       div.innerHTML += "<option value='"+ i +"'>"+ tabValAttribut[i] +"</option>";
 
-  document.getElementById("selectFiltre").selectedIndex = 0;
+  document.getElementById("selectFiltreColonne").selectedIndex = 0;
 }
 
 
 function appliquerFiltre()
 {
+  workingData = importedData;
   workingData = FiltresColonnes(workingData);
   workingData = FiltrePeriode(workingData);
   workingData = FiltreCoord(workingData);
@@ -137,13 +129,6 @@ function appliquerFiltre()
 
 function FiltrePeriode(data)
 {
-  /*
-  const [from, to] = getParsed(fromSlider, toSlider);
-  const [startPeriode, endPeriode] = ExtrairePeriode(from, to);
-  startDatePeriode = startPeriode;
-  endDatePeriode = endPeriode;
-  */
-
   var filteredData = [];
 
   for (var i = 0; i < data.length; i++)
@@ -238,6 +223,7 @@ function ExtrairePeriode(from, to)
   return [new Date(startDatePeriode), new Date(endDatePeriode)];
 }
 
+/*
 function FiltreCoord(data)
 {
   if (coordLatNO == 0 && coordLatSE == 0 &&
@@ -260,7 +246,7 @@ function FiltreCoord(data)
 
   return filteredData;
 }
-
+*/
 
 function buildBandeau(data)
 {
@@ -283,4 +269,10 @@ function drawLine(x)
   ctx.moveTo(x, 0);
   ctx.lineTo(x, 20);
   ctx.stroke();
+}
+
+function afficherStats()
+{
+  document.getElementById('stats').innerHTML = 
+  'nbLignesImportees : ' + importedData.length + ' - nbLignesAffichees : ' + workingData.length;
 }

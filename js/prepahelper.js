@@ -48,28 +48,6 @@ function ConvDateFromExcel(val)
   return date[2] + "-" + date[1] + "-" + date[0] + " " + tab[1]; 
 }
 
-
-function getDate(val, unitePeriode)
-{
-  var months = (val.getMonth() + 1 < 10) ? '0' + (val.getMonth() + 1) : val.getMonth() + 1;
-  var hours = (val.getHours() + 1 < 10) ? '0' + (val.getHours() + 1) : val.getHours() + 1;
-  var minutes = (val.getMinutes() + 1 < 10) ? '0' + (val.getMinutes() + 1) : val.getMinutes() + 1;
-
-  if (unitePeriode == 0) return ''+val.getFullYear();
-  else if (unitePeriode == 1) return ''+val.getFullYear() + '-' + months
-  else if (unitePeriode == 2) return ''+val.getFullYear() + '-' + val.getWeek();
-  else if (unitePeriode == 3) return ''+val.toLocaleDateString();
-  else if (unitePeriode == 4) return ''+val.toLocaleDateString() + " " + hours;
-  else if (unitePeriode == 5) return ''+val.toLocaleDateString() + " " + hours + ":" + minutes;
-  else if (unitePeriode == 6) return ''+val.toLocaleString();
-  else if (unitePeriode == 7) return ''+val.toISOString();
-}
-
-function getYMD(date)
-{
-  return date.toISOString().replace('T', ' ').substring(0,19);
-}
-
 function getMinDate(tab)
 {
   var min = new Date(2999, 11, 31).getTime();
@@ -92,6 +70,13 @@ function getMaxDate(tab)
   return new Date(max);
 }
 
+function addSeconds(date, seconds)
+{
+  date.setSeconds(date.getSeconds() + seconds);
+  return date;
+}
+
+
 function getTruncatedDate(date)
 {
   var sdate = '';
@@ -111,13 +96,54 @@ function getTruncatedDate(date)
   return new Date(sdate);
 }
 
-function addSeconds(date, seconds)
+function getDate(val, unitePeriode)
 {
-  date.setSeconds(date.getSeconds() + seconds);
-  return date;
+  var months = (val.getMonth() + 1 < 10) ? '0' + (val.getMonth() + 1) : val.getMonth() + 1;
+  var hours = (val.getHours() < 10) ? '0' + (val.getHours()) : val.getHours();
+  var minutes = (val.getMinutes() < 10) ? '0' + (val.getMinutes()) : val.getMinutes();
+
+  if (unitePeriode == 0) return ''+val.getFullYear();
+  else if (unitePeriode == 1) return ''+val.getFullYear() + '-' + months
+  else if (unitePeriode == 2) return ''+val.getFullYear() + '-' + val.getWeek();
+  else if (unitePeriode == 3) return ''+val.toLocaleDateString();
+  else if (unitePeriode == 4) return ''+val.toLocaleDateString() + " " + hours;
+  else if (unitePeriode == 5) return ''+val.toLocaleDateString() + " " + hours + ":" + minutes;
+  else if (unitePeriode == 6) return ''+val.toLocaleString();
+  else if (unitePeriode == 7) return ''+val.toISOString();
 }
+
+function getYMD(date)
+{
+  return date.toISOString().replace('T', ' ').substring(0,19);
+}
+
+
 
 function finalGetDate(date, type, fillDefault)
 {
+  var template = '%year%-%month%-%day% %hour%:%minute%:%second%.%millisecond%';
+  var template_week = '%year%-%week%';
+  var template_defaut = '0001-01-01 00:00:00.0';
+  var sdate = date.toISOString().replace('T', ' ');
+
+  var year = date.getFullYear();
+  var month = (val.getMonth() + 1 < 10) ? '0' + (val.getMonth() + 1) : val.getMonth() + 1;
+  var day = (val.getDate() < 10) ? '0' + val.getDate() : val.getDate();
+  var hour = (val.getHours() < 10) ? '0' + val.getHours() : val.getHours();
+  var minute = (val.getMinutes() < 10) ? '0' + val.getMinutes() : val.getMinutes();
+  var time = val.getTime();
+
+  var idx = 0;
+  if (type == 'year') idx = 4;
+  else if (type == 'month') idx = 7;
+  else if (type == 'day') idx = 10;
+  else if (type == 'hour') idx = 13;
+  else if (type == 'minute') idx = 16;
+  else if (type == 'second') idx = 19;
+  else if (type == 'millisecond') idx = sdate.length - 1;
+  else if (type == 'week') idx = sdate.length - 1;
+  
+  sdate = sdate.substring(0, idx);
+  if (fillDefault && type != 'week') sdate += template.substring(idx);
 
 }

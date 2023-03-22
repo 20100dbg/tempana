@@ -17,3 +17,9 @@ font-weight: bold;
 .nomEltec {
 font-weight: bold;
 }
+
+#map { 
+  height: 400px; 
+  width:800px; 
+  margin-bottom: 30px; 
+}

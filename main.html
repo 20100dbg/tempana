@@ -7,22 +7,26 @@
   <link rel="stylesheet" type="text/css" href="css/slider.css">
   <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="css/bootstrap-grid.min.css">
+
+  <link rel="stylesheet" href="css/leaflet.css" />
+  <link rel="stylesheet" href="css/leaflet-geoman.css" />
+
 	<title>Tempana</title>
 </head>
 <body>
 
-
-<!-- <a href="#" data-toggle="collapse" data-target="#divFiltres">Afficher/masquer paramètres</a> -->
+<a href="#" data-toggle="collapse" data-target="#divFiltres">Afficher/masquer paramètres</a>
 <div id="divFiltres" class="container collapse show">
   <div class="row">
     <div class="col cadre"
     id="drop_zone" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
-      <b><i>Glisser le fichier ici</i></b>
 
-      <!--<input type="file" id="fileInput" onchange="importerFichierEvent();" />-->
+      <b><i>Glisser le fichier ici</i></b><span style='float:right' id="nomFichierImport"></span>
+
     </div>
   </div>
   <div class="row">
+
     <div class="col cadre">
       Sélection de la période<br>
       <div class="sliders_control">
@@ -34,15 +38,24 @@
       <div id="infoSlider"></div>
     </div>
     
-    <div class="col cadre">
+    <!-- div class="col cadre">
       Sélection des coordonnées<br>
       <textarea id="filtreCoord" rows="1" cols="50" placeholder="[[yy.yyy,xx.xxx],[yy.yyy,xx.xxx]]"></textarea>
+    </div -->
+
+  </div>
+
+  <div class="row">
+    <div class="col cadre">
+      Filtre géographique<br>
+      <div id="map"></div>   
     </div>
   </div>
+
   <div class="row">
     <div class="col cadre">
       Filtres sur les colonnes<br>
-      <select id="selectFiltre" onchange="ajouterFormFiltre(this);"></select>
+      <select id="selectFiltreColonne" onchange="ajouterFormFiltre(this);"></select>
       <div id="filtres" class="row"></div>
     </div>
   </div>
@@ -52,13 +65,13 @@
       <div class="container">
       <div class="row">
       <div class="col">
-      Colonne étudiée <select id="categ" onchange="changeCritere(this);"></select><br>
+      Colonne étudiée <select id="selectCateg" onchange="changeColonneCateg(this);"></select><br>
       </div>
       <div class="col">
-      Colonne eltec <select id="eltec" multiple onchange="selectColonneEltec(this);"></select><br>
+      Colonne eltec <select id="selectEltec" multiple onchange="changeColonneEltec(this);"></select><br>
       </div>
       <div class="col">
-      Regrouper par <select id="unitePeriode" onchange="changeUnitePeriode(this);">
+      Regrouper par <select id="selectUnitePeriode" onchange="changeUnitePeriode(this);">
         <option value="0">Annee</option>
         <option value="1" selected>Mois</option>
         <option value="2">Semaine</option>
@@ -71,7 +84,7 @@
       </div>
 
       <div class="col">
-      Unite de temps <select id="uniteTemps" onchange="changeUniteTemps(this);">
+      Unite de temps <select id="selectUniteTemps" onchange="changeUniteTemps(this);">
         <option value="year">Annee</option>
         <option value="month">Mois</option>
         <option value="week">Semaine</option>
@@ -88,7 +101,6 @@
 
       </div>
       </div>
-
       <!--
       <button onclick="appliquerFiltre();">Appliquer les filtres</button> - <button onclick="supprimerFiltre();">Supprimer les filtres</button><br>
       <button onclick="creerGraphiques();">Créer les graphiques</button> - <button onclick="viderGraphiques();">Vider les graphiques</button><br>
@@ -98,6 +110,7 @@
   <div class="row">
     <div class="col">
       <button class="btn btn-primary" type="button" onclick="creerFiltreEtGraphiques();">Créer les graphiques</button>
+      <span id="stats"></span>
     </div>
 </div>
 </div>
@@ -194,6 +207,7 @@
   <div class="container " id="divTest">
     <div class="row">
 
+    <div>Bandeau temporel pour <span class="nomCateg"></span></div>
     <div class="col-md-12">
       <div></div>
       <div id="chart12" class="chart"></div>
@@ -222,25 +236,58 @@
 <script src="js/prepadata.js"></script>
 <script src="js/slider.js"></script>
 
+<script src="js/leaflet.js"></script>
+<script src="js/leaflet-geoman.min.js"></script>
+<script src="js/ExtractCoords.js"></script>
+
+<script type="text/javascript">
+var lineHeaders = '';
+var layersPoints = [];
+var tabPointsImport = [];
+var tabPointsFiltre = [];
+var map;
+
+window.onload = function() {
+
+    //'carto/{z}/{x}/{y}.png'
+    //'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+    var baseLayer = L.tileLayer('carto/{z}/{x}/{y}.png', { });
+    
+    map = new L.Map('map', {
+      editable: true,
+      center: {lat:48.89, lng:7.8},
+      zoom: 10,
+      layers: [baseLayer]
+    });
+    L.control.scale({imperial:false}).addTo(map);
+
+    map.pm.addControls({ position: 'topleft', drawMarker: false,drawCircleMarker: false,
+      drawPolyline: false,drawText: false,cutPolygon: false,rotateMode: false });
+
+};
+</script>
+
 <script>
-var importedData, workingData;
+var importedData = [], workingData = [];
 
 function creerFiltreEtGraphiques()
 {
   viderGraphiques();
   appliquerFiltre();
+  creerNomsColonnes();
   creerGraphiques();
+  afficherStats();
 }
 
-function creerGraphiques()
+function creerNomsColonnes()
 {
-  var divCateg = document.getElementById('categ');
+  var divCateg = document.getElementById('selectCateg');
   var nomCateg = 'Pas de colonne sélectionnée !';
   if (divCateg.selectedIndex > 0) nomCateg = divCateg.item(divCateg.selectedIndex).text;
   var divs = document.querySelectorAll('.nomCateg');
   for (var i = 0; i < divs.length; i++) divs[i].innerHTML = nomCateg;
 
-  var divEltec = document.getElementById('eltec');
+  var divEltec = document.getElementById('selectEltec');
   var nomEltec = '';
   for (var i = 0; i < divEltec.options.length; i++)
     if (divEltec.options[i].selected) nomEltec += divEltec.options[i].text + ',';
@@ -248,7 +295,10 @@ function creerGraphiques()
 
   var divs = document.querySelectorAll('.nomEltec');
   for (var i = 0; i < divs.length; i++) divs[i].innerHTML = nomEltec;
+}
 
+function creerGraphiques()
+{
   GraphEvolutionGlobale(workingData);
   GraphEvolutionPeriodeCateg(workingData);
   GraphEvolutionGlobaleCateg(workingData);
@@ -267,9 +317,6 @@ function viderGraphiques()
 {
   for (var i = am5.registry.rootElements.length - 1; i >= 0; i--)
     am5.registry.rootElements[i].dispose();
-}
-
-window.onload = function() {
 }
 
 </script>
