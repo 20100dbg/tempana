@@ -36,9 +36,6 @@ function importerFichier(file)
     }
 
     importedData.sort(function(a,b) { return a[IDX_DATE] > b[IDX_DATE] });
-    //startDateGlobal = getMinDate(importedData);
-    //endDateGlobal = getMaxDate(importedData);
-    
     startDateGlobal = importedData[0][IDX_DATE];
     endDateGlobal = importedData[importedData.length - 1][IDX_DATE];
 
@@ -51,7 +48,6 @@ function importerFichier(file)
     workingData = importedData;
   }
   fileReader.readAsText(file);
-  
 }
 
 
@@ -73,7 +69,6 @@ function importerWIRESHARK(txt)
   for (var j = 0; j < tabCriteres.length; j++) tabCriteres[j] = tabCriteres[j].replace(/^"+|"+$/g, '');
   tabCriteres = tabPad.concat(tabCriteres.slice(1));
   tabCriteres = buildTabCriteres(tabCriteres);
-
   remplirSelectCriteres(tabCriteres);
   remplirSelectFiltre(tabCriteres);
   remplirSelectEltec(tabCriteres);

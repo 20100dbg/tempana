@@ -1,4 +1,3 @@
-
 function GraphEvolutionGlobale(data)
 {
   var container = document.getElementById("chart1");
@@ -117,6 +116,7 @@ function GraphEvolutionPeriodeCateg(data)
   root.setThemes([ am5themes_Kelly.new(root) ]);
 
   data = buildEvolutionCateg(data, idxColonne, idxUnitePeriode);
+  //console.log(data);
 
   var chart = root.container.children.push(am5xy.XYChart.new(root, {
     panX: false,
@@ -492,6 +492,7 @@ function GraphElementsActifs(data)
   chart.appear();
 }
 
+
 function GraphRecurrenceHeureJour(data)
 {
   var container = document.getElementById("chart5");
@@ -572,116 +573,80 @@ yRenderer.labels.template.setAll({
 
 function GraphRecurrenceHeureMois(data)
 {
-  if (idxColonne == -1) return;
-
   var container = document.getElementById("chart6");
   var root = am5.Root.new(container);
   root.setThemes([ am5themes_Animated.new(root) ]);
 
   var chart = root.container.children.push(am5xy.XYChart.new(root, {
-    panX: true,
-    panY: true,
-    wheelY: "zoomXY"
+    panX: false,
+    panY: false,
+    wheelX: "none",
+    wheelY: "none",
+    layout: root.verticalLayout
   }));
 
-  var xAxis = chart.xAxes.push(am5xy.ValueAxis.new(root, {
-    maxDeviation:1,
-    renderer: am5xy.AxisRendererX.new(root, {
-      pan:"zoom"
-    }),
-    tooltip: am5.Tooltip.new(root, {})
-  }));
-
-  xAxis.children.moveValue(am5.Label.new(root, {
-    text: "Jour du mois",
-    x: am5.p50,
-    centerX: am5.p50
-  }), xAxis.children.length - 1);
-
-  var yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
-    maxDeviation:1,
+  var yAxis = chart.yAxes.push(am5xy.CategoryAxis.new(root, {
+    maxDeviation: 0,
+    categoryField: "heure",
     renderer: am5xy.AxisRendererY.new(root, {
-      pan:"zoom"
-    }),
-    tooltip: am5.Tooltip.new(root, {})
-  }));
-
-  yAxis.children.moveValue(am5.Label.new(root, {
-    rotation: -90,
-    text: "Heure",
-    y: am5.p50,
-    centerX: am5.p50
-  }), 0);
-
-
-  var series = chart.series.push(am5xy.LineSeries.new(root, {
-    calculateAggregates: true,
-    xAxis: xAxis,
-    yAxis: yAxis,
-    valueYField: "y",
-    valueXField: "x",
-    valueField: "value",
-    tooltip: am5.Tooltip.new(root, {
-      pointerOrientation: "horizontal",
-      labelText: "[bold]{title}[/]\n{value}"
+      visible: false,
+      minGridDistance: 20,
+      inversed: true
     })
   }));
 
-  series.strokes.template.set("visible", false);
+  var xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root, {
+    categoryField: "jour",
+    renderer: am5xy.AxisRendererX.new(root, {
+      visible: false,
+      minGridDistance: 30,
+      opposite:false
+    })
+  }));
 
-  var circleTemplate = am5.Template.new({});
-  circleTemplate.adapters.add("fill", function (fill, target) {
-    var dataItem = target.dataItem;
-    if (dataItem) {
-      return am5.Color.fromString(dataItem.dataContext.color);
-    }
-    return fill
-  });
+  var series = chart.series.push(am5xy.ColumnSeries.new(root, {
+    calculateAggregates: true,
+    stroke: am5.color(0xffffff),
+    clustered: false,
+    xAxis: xAxis,
+    yAxis: yAxis,
+    categoryXField: "jour",
+    categoryYField: "heure",
+    valueField: "value"
+  }));
 
-  series.bullets.push(function () {
-    var bulletCircle = am5.Circle.new(root, {
-      radius: 5,
-      fill: series.get("fill"),
-      fillOpacity: 0.8
-    }, circleTemplate);
-    return am5.Bullet.new(root, {
-      sprite: bulletCircle
-    });
+  series.columns.template.setAll({
+    tooltipText: "{value}",
+    strokeOpacity: 1,
+    strokeWidth: 2,
+    width: am5.percent(100),
+    height: am5.percent(100)
   });
 
   series.set("heatRules", [{
-    target: circleTemplate,
-    min: 3,
-    max: 60,
+    target: series.columns.template,
+    min: am5.color(0xfffb77),
+    max: am5.color(0xfe131a),
     dataField: "value",
-    key: "radius"
+    key: "fill"
   }]);
 
+  var data = BuildRecurrenceHeureMois(data);
 
-  data = BuildRecurrenceHeureMois(data, idxColonne);
   series.data.setAll(data);
 
-  var background = series.get("tooltip").get("background");
-  background.set("stroke", root.interfaceColors.get("alternativeBackground"));
-  background.adapters.add("fill", function (fill, target) {
-    var dataItem = target.dataItem;
-    if (dataItem && dataItem.dataContext) {
-      return am5.Color.fromString(dataItem.dataContext.color);
-    }
-    return fill
-  });
+  yAxis.data.setAll([{ heure: "00h" },{ heure: "01h" },{ heure: "02h" },{ heure: "03h" },{ heure: "04h" },{ heure: "05h" },
+    { heure: "06h" },{ heure: "07h" },{ heure: "08h" },{ heure: "09h" },{ heure: "10h" },{ heure: "11h" },{ heure: "12h" },
+    { heure: "13h" },{ heure: "14h" },{ heure: "15h" },{ heure: "16h" },{ heure: "17h" },{ heure: "18h" },{ heure: "19h" },
+    { heure: "20h" },{ heure: "21h" },{ heure: "22h" },{ heure: "23h" }]);
 
+  xAxis.data.setAll([{ jour: "01" },{ jour: "02" },{ jour: "03" },{ jour: "04" },{ jour: "05" },{ jour: "06" },
+    { jour: "07" },{ jour: "08" },{ jour: "09" },{ jour: "10" },{ jour: "11" },{ jour: "12" },{ jour: "13" },
+    { jour: "14" },{ jour: "15" },{ jour: "16" },{ jour: "17" },{ jour: "18" },{ jour: "19" },{ jour: "20" },
+    { jour: "21" },{ jour: "22" },{ jour: "23" },{ jour: "24" },{ jour: "25" },{ jour: "26" },{ jour: "27" },
+    { jour: "28" },{ jour: "29" },{ jour: "30" },{ jour: "31" }]);
 
-  chart.set("cursor", am5xy.XYCursor.new(root, {
-    xAxis: xAxis,
-    yAxis: yAxis,
-    snapToSeries: [series]
-  }));
-
-
-  series.appear();
   chart.appear();
-
 }
 
 
@@ -803,6 +768,121 @@ function GraphRecurrenceJourMois(data)
   data = BuildRecurrenceJourMois(data);
 
   xAxis.data.setAll(data);
+  series.data.setAll(data);
+
+  series.appear();
+  chart.appear();
+}
+
+function GraphRepartitionCateg(data)
+{
+  if (idxColonne == -1) return;
+
+  var container = document.getElementById("chart11");
+  var root = am5.Root.new(container);
+  root.setThemes([ am5themes_Kelly.new(root) ]);
+
+  var chart = root.container.children.push(am5percent.PieChart.new(root, { layout: root.verticalLayout }));
+
+  var series = chart.series.push(am5percent.PieSeries.new(root, {
+    valueField: "value",
+    categoryField: "category"
+  }));
+
+  data = buildRepartitionCateg(data, idxColonne);
+
+  series.data.setAll(data);
+
+  series.appear();
+}
+
+
+
+
+function GraphGanttCateg(data)
+{
+  if (idxColonne == -1) return;
+
+  var container = document.getElementById("chart12");
+  var root = am5.Root.new(container);
+  root.setThemes([ am5themes_Kelly.new(root) ]);
+  
+  var chart = root.container.children.push(am5xy.XYChart.new(root, {
+    panX: false,
+    panY: false,
+    wheelX: "panX",
+    wheelY: "zoomX",
+    layout: root.verticalLayout
+  }));
+
+  var cursor = chart.set("cursor", am5xy.XYCursor.new(root, { behavior: "zoomX" }));
+  cursor.lineY.set("visible", false);
+
+  var legend = chart.children.push(am5.Legend.new(root, {
+    centerX: am5.p50,
+    x: am5.p50
+  }))
+
+  var colors = chart.get("colors");
+
+  var tmptabCateg = buildTabValeurs(data, idxColonne);
+  var tabCateg = [];
+  for (var i = 0; i < tmptabCateg.length; i++) tabCateg.push({category:tmptabCateg[i]});
+
+  data = buildGanttCateg(data, idxColonne);
+
+  console.log(data);
+
+  for (var i = 0; i < data.length; i++)
+  {
+    var idxCateg = tmptabCateg.indexOf(data[i].category);
+    data[i].columnSettings = {
+      fill: am5.Color.brighten(colors.getIndex(idxCateg), 0)
+    }
+  }
+
+
+
+  var yAxis = chart.yAxes.push(
+    am5xy.CategoryAxis.new(root, {
+      categoryField: "category",
+      renderer: am5xy.AxisRendererY.new(root, { inversed: true }),
+      tooltip: am5.Tooltip.new(root, {
+        themeTags: ["axis"],
+        animationDuration: 200
+      })
+    })
+  );
+
+
+  yAxis.data.setAll(tabCateg);
+
+  var xAxis = chart.xAxes.push(
+    am5xy.DateAxis.new(root, {
+      baseInterval: { timeUnit: "second", count: 1 },
+      renderer: am5xy.AxisRendererX.new(root, {strokeOpacity: 0.1})
+    })
+  );
+
+  var series = chart.series.push(am5xy.ColumnSeries.new(root, {
+    xAxis: xAxis,
+    yAxis: yAxis,
+    openValueXField: "fromDate",
+    valueXField: "toDate",
+    categoryYField: "category",
+    sequencedInterpolation: true
+  }));
+
+  series.columns.template.setAll({
+    templateField: "columnSettings",
+    strokeOpacity: 0,
+    tooltipText: "{category}: {fromDate.formatDate('yyyy-MM-dd HH:mm')} - {toDate.formatDate('yyyy-MM-dd HH:mm')}"
+  });
+
+  series.data.processor = am5.DataProcessor.new(root, {
+    dateFields: ["fromDate", "toDate"],
+    dateFormat: "yyyy-MM-dd HH:mm:ss"
+  });
   series.data.setAll(data);
 
   series.appear();

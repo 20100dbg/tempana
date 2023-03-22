@@ -34,11 +34,7 @@ input[type=range]::-webkit-slider-thumb:active {
 }
 
 input[type="number"] {
-  color: #8a8383;
   width: 50px;
-  height: 30px;
-  font-size: 20px;
-  border: none;
 }
 
 input[type=number]::-webkit-inner-spin-button, 

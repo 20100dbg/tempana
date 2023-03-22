@@ -51,16 +51,24 @@ function ConvDateFromExcel(val)
 
 function getDate(val, unitePeriode)
 {
-  if (unitePeriode == 0) return val.getFullYear();
-  else if (unitePeriode == 1) return val.getFullYear() + '-' + (val.getMonth() + 1);
-  else if (unitePeriode == 2) return val.getFullYear() + '-' + val.getWeek();
-  else if (unitePeriode == 3) return val.toLocaleDateString();
-  else if (unitePeriode == 4) return val.toLocaleDateString() + " " + val.getHours();
-  else if (unitePeriode == 5) return val.toLocaleDateString() + " " + val.getHours() + " " + val.getMinutes();
-  else if (unitePeriode == 6) return val.toLocaleString();
-  else if (unitePeriode == 7) return val.toISOString();
+  var months = (val.getMonth() + 1 < 10) ? '0' + (val.getMonth() + 1) : val.getMonth() + 1;
+  var hours = (val.getHours() + 1 < 10) ? '0' + (val.getHours() + 1) : val.getHours() + 1;
+  var minutes = (val.getMinutes() + 1 < 10) ? '0' + (val.getMinutes() + 1) : val.getMinutes() + 1;
+
+  if (unitePeriode == 0) return ''+val.getFullYear();
+  else if (unitePeriode == 1) return ''+val.getFullYear() + '-' + months
+  else if (unitePeriode == 2) return ''+val.getFullYear() + '-' + val.getWeek();
+  else if (unitePeriode == 3) return ''+val.toLocaleDateString();
+  else if (unitePeriode == 4) return ''+val.toLocaleDateString() + " " + hours;
+  else if (unitePeriode == 5) return ''+val.toLocaleDateString() + " " + hours + ":" + minutes;
+  else if (unitePeriode == 6) return ''+val.toLocaleString();
+  else if (unitePeriode == 7) return ''+val.toISOString();
 }
 
+function getYMD(date)
+{
+  return date.toISOString().replace('T', ' ').substring(0,19);
+}
 
 function getMinDate(tab)
 {
@@ -101,4 +109,15 @@ function getTruncatedDate(date)
   else sdate = date.getTime();
 
   return new Date(sdate);
+}
+
+function addSeconds(date, seconds)
+{
+  date.setSeconds(date.getSeconds() + seconds);
+  return date;
+}
+
+function finalGetDate(date, type, fillDefault)
+{
+
 }

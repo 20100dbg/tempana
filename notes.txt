@@ -49,3 +49,8 @@ _____
  "millisecond", "second", "minute", "hour", "day", "week", "month", and "year".
 
 avec un xy, créer une grille heatmap pour représenter le heure/jour/mois
+
+
+sélection de la colonne contenant le "count" pour le poids (heatmap et prob d'autres)
+
+colonnes gdh debut - gdh fin

@@ -47,7 +47,6 @@ function buildEvolutionGlobaleCumulative(tab)
 }
 
 
-
 function buildEvolutionCateg(tab, colonneSerie, unitePeriode)
 {
   tabSerie = buildTabValeurs(tab, colonneSerie)
@@ -171,7 +170,6 @@ function buildElementsActifs(tab)
       if (!(col in tmpdata)) tmpdata[col] = 1;
       else tmpdata[col] += 1;
     }
-
   }
 
   for (var eltec in tmpdata)
@@ -203,7 +201,6 @@ function BuildRecurrenceHeureJour(tab)
     }
   }
 
-
   for (var i = 0; i < tab.length; i++)
   {
     var date = tab[i][IDX_DATE];
@@ -228,11 +225,10 @@ function BuildRecurrenceHeureJour(tab)
   return data;
 }
 
-
+/*
 function BuildRecurrenceHeureMois(tab, idxColonne)
 {
   var tabCateg = [];
-
   var tmpdata = {}
 
   for (var i = 0; i < tab.length; i++)
@@ -271,6 +267,40 @@ function BuildRecurrenceHeureMois(tab, idxColonne)
           "value": parseInt(tmpdata[jour][heure][categ].value)
         });
       }
+    }
+  }
+
+  return data;
+}*/
+
+
+function BuildRecurrenceHeureMois(tab)
+{
+  var tmpdata = {}
+
+  for (var i = 0; i < tab.length; i++)
+  {
+    var date = tab[i][IDX_DATE];    
+    var jour = (date.getDate() < 10) ? '0'+date.getDate():date.getDate();
+    var heure = (date.getHours() < 10) ? '0'+date.getHours():date.getHours() + 'h';
+
+    if (!(jour in tmpdata)) tmpdata[jour] = {};
+    if (!(heure in tmpdata[jour])) tmpdata[jour][heure] = 0;
+
+    tmpdata[jour][heure] += 1;
+  }
+
+  var data = [];
+
+  for (var jour in tmpdata)
+  {
+    for (var heure in tmpdata[jour])
+    {
+      data.push({
+        "heure": heure,
+        "jour": jour,
+        "value": parseInt(tmpdata[jour][heure])
+      });
     }
   }
 
@@ -314,6 +344,51 @@ function BuildRecurrenceJourMois(tab)
   for (var jour in tmpdata)
   {
     data.push({ date: jour, value: tmpdata[jour] });
+  }
+
+  return data;
+}
+
+
+function buildRepartitionCateg(tab, idxColonne)
+{
+  var tmpdata = [];
+  var data = [];
+
+  for (var i = 0; i < tab.length; i++)
+  {
+    var tmp = tab[i][idxColonne];
+    if (!(tmp in tmpdata)) tmpdata[tmp] = 0;
+    tmpdata[tmp] += 1;
+  }
+
+  for (var tmp in tmpdata)
+  {
+    data.push({category:tmp, value: tmpdata[tmp]});
+  }
+
+  return data;
+}
+
+
+function buildGanttCateg(tab, idxColonne)
+{
+  var data = [];
+  var diff = endDatePeriode - startDatePeriode;
+  diff = diff / 1000 / 360;
+
+  for (var i = 0; i < tab.length; i++)
+  {
+    var categ = tab[i][idxColonne];
+
+    var dateDebut = getYMD(tab[i][IDX_DATE]);
+    var dateFin = getYMD(addSeconds(tab[i][IDX_DATE], diff));
+
+    data.push({
+      category:categ, 
+      fromDate: dateDebut,
+      toDate: dateFin
+    });
   }
 
   return data;

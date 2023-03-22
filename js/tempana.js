@@ -10,7 +10,7 @@ var offsetColonne = 3;
 var idxColonne = -1;
 var idxColonneEltec = -1;
 var tabColonneEltec = [];
-var idxUnitePeriode = 0;
+var idxUnitePeriode = 1;
 
 var startDateGlobal = 0;
 var endDateGlobal = 0;
@@ -137,19 +137,18 @@ function appliquerFiltre()
 
 function FiltrePeriode(data)
 {
-  const fromSlider = document.querySelector('#fromSlider');
-  const toSlider = document.querySelector('#toSlider');
+  /*
   const [from, to] = getParsed(fromSlider, toSlider);
-
   const [startPeriode, endPeriode] = ExtrairePeriode(from, to);
   startDatePeriode = startPeriode;
   endDatePeriode = endPeriode;
+  */
 
   var filteredData = [];
 
   for (var i = 0; i < data.length; i++)
   {
-    if (data[i][IDX_DATE] >= startPeriode && data[i][IDX_DATE] <= endPeriode)
+    if (data[i][IDX_DATE] >= startDatePeriode && data[i][IDX_DATE] <= endDatePeriode)
       filteredData.push(data[i]);
   }
 
@@ -226,6 +225,8 @@ function updatePeriode(fromSlider, toSlider)
   const [startPeriode, endPeriode] = ExtrairePeriode(from, to);
   startDatePeriode = startPeriode;
   endDatePeriode = endPeriode;
+
+  AfficherPeriode();
 }
 
 function ExtrairePeriode(from, to)
