@@ -46,8 +46,18 @@ _____
 
 "millisecond", "second", "minute", "hour", "day", "week", "month", and "year".
 
+générer les listes des périodes et unites de temps en auto
+
 sélection de la colonne contenant le "count" pour le poids (heatmap et prob d'autres)
 
 colonnes gdh debut - gdh fin
 
 filtre geo : case à cocher "exclure les zones tracées"
+
+quand import de nouveau fichier : vider les forms
+- filtres colonnes
+- reset des idx...
+
+options :
+- filtre "contains" sur une colonne
+- supprimer doublons des eltecs

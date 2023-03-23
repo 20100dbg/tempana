@@ -1,14 +1,13 @@
-var tabUniteTemps = ["annee", "mois", "semaine", "jour", "heure" ];
+var map;
+var layersPoints = [];
+var importedData = [], workingData = [];
 //var tabUniteTemps = ["year", "month", "week", "day", "hour", "minute", "second", "millisecond"];
 
 var uniteTemps = "day";
 var nbUniteTemps = 1;
 
-var tabCouleur = [ "#ff0000", "#ffff00", "#00ff00", "#0080ff", "#ff80c0", "#00ffff", "#004080", "#008000", "#ff8000", "#804000", "#acac59", "#950095", "#c0c0c0"];
-var tabValeursCriteres = [];
-//var tabCriteres = [];
-
-var idxColonne = -1;
+var idxColonneCateg = -1;
+var idxColonneContient = -1;
 var tabColonneEltec = [];
 var idxUnitePeriode = 1;
 
@@ -23,109 +22,138 @@ var IDX_DATE = 2;
 var IDX_DATE_FIN = 3;
 var offsetColonne = 3;
 
-function resetCanvas()
+//ok
+//initialise la carte utilisée pour prévisualiser et filtrer les évènements
+window.onload = function() {
+
+    //'carto/{z}/{x}/{y}.png'
+    //'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+    var baseLayer = L.tileLayer('carto/{z}/{x}/{y}.png', { });
+    
+    map = new L.Map('map', {
+      editable: true,
+      center: {lat:48.89, lng:7.8},
+      zoom: 10,
+      layers: [baseLayer]
+    });
+    L.control.scale({imperial:false}).addTo(map);
+
+    map.pm.addControls({ position: 'topleft', drawMarker: false,drawCircleMarker: false,
+      drawPolyline: false,drawText: false,cutPolygon: false,rotateMode: false });
+};
+
+
+//ok
+//appelé par le bouton utilisateur.
+//doit vider les graphiques, réappliquer les filtres qui ont pu changer
+//créer les graphiques et afficher le noms des colonnes et le nombre de lignes
+function creerFiltreEtGraphiques()
+{
+  viderGraphiques();
+  appliquerFiltres();
+  creerNomsColonnes();
+  creerGraphiques();
+  afficherStats();
+}
+
+
+//ok
+//génère les graphiques avec les données filtrées en amont
+function creerGraphiques()
+{
+  GraphEvolutionGlobale(workingData);
+  GraphEvolutionGlobaleCumulative(workingData);
+  
+  GraphRecurrenceHeureJour(workingData);
+  GraphRecurrenceSemaine(workingData);
+  GraphRecurrenceJourMois(workingData);
+  GraphRecurrenceHeureMois(workingData);
+
+  GraphEvolutionPeriodeCateg(workingData);
+  GraphEvolutionGlobaleCateg(workingData);
+  GraphEvolutionGlobaleCumulativeCateg(workingData);
+  GraphRepartitionCateg(workingData);
+
+  GraphElementsActifs(workingData);
+  GraphGanttCateg(workingData);
+}
+
+//ok
+//Vide tous les graphiques générés. Le html retrouve sont format d'origine
+function viderGraphiques()
+{
+  for (var i = am5.registry.rootElements.length - 1; i >= 0; i--)
+    am5.registry.rootElements[i].dispose();
+}
+
+//ok
+//Vide le bandeau temporel représentant la totalité évènements
+function viderBandeau()
 {
   var c = document.getElementById("bandeau");
   var ctx = c.getContext("2d");
   ctx.clearRect(0,0,c.width,c.height);
 }
 
-function resetCriteres()
-{
-  idxColonne = -1;
-  tabColonneEltec = [];
-  resetCanvas();
-  afficherStats();
-}
 
-function changeColonneCateg(obj) { idxColonne = obj.value; }
-
-function changeUnitePeriode(obj) { idxUnitePeriode = obj.value; }
-
-function changeUniteTemps(obj) { uniteTemps = obj.value; }
-
-function changeNbUniteTemps(obj) { nbUniteTemps = obj.value; }
-
-function changeColonneEltec(obj)
-{
-  tabColonneEltec = [];
-
-  for (var i = 0; i < obj.options.length; i++)
-    if (obj.options[i].selected)
-      tabColonneEltec.push(obj.options[i].value);
-}
-
-function remplirForm(tabCriteres)
-{
-  var tabCriteres = buildTabCriteres(tabCriteres);
-  remplirSelectCategorie(tabCriteres);
-  remplirSelectFiltreColonne(tabCriteres);
-  remplirSelectEltec(tabCriteres);
-}
-
-
-function remplirSelectCategorie(tabCriteres)
-{
-  var div = document.getElementById('selectCateg');
-  div.innerHTML = '<option value="-1">Colonne catégorie</option>';
-  for (var i = 0; i < tabCriteres.length; i++)  
-    div.innerHTML += '<option value="'+ (i + offsetColonne) +'">' + tabCriteres[i] + '</options>';
-}
-
-
-function remplirSelectFiltreColonne(tabCriteres)
-{
-  var div = document.getElementById('selectFiltreColonne');
-  div.innerHTML = '<option value="-1">Choix filtre</option>';
-  for (var i = 0; i < tabCriteres.length; i++)  
-    div.innerHTML += '<option value="'+ (i + offsetColonne) +'">' + tabCriteres[i] + '</options>';
-}
-
-function remplirSelectEltec(tabCriteres)
-{
-  var div = document.getElementById('selectEltec');
-  div.innerHTML = '';
-  //div.innerHTML = '<option value="-1">Choix eltec</option>';
-  for (var i = 0; i < tabCriteres.length; i++)  
-    div.innerHTML += '<option value="'+ (i + offsetColonne) +'">' + tabCriteres[i] + '</options>';
-}
-
-
-function ajouterFormFiltre(obj)
-{
-  if (obj.value == "-1") return;
-  var div = document.getElementById('filtres');
-  div.innerHTML += '<div id="div-'+ obj.value +'" class="col-sm"></div>';
-
-  div = document.getElementById("div-"+ obj.value);
-  div.innerHTML = '<b>' + obj.item(obj.selectedIndex).text + '</b><br>' +
-                  '<select id="values-'+ obj.value +'" multiple></select><br>' +
-                  '<button onclick="supprimerFiltre(\''+ obj.value +'\')">Supprimer filtre</button>';
-
-  div = document.getElementById("values-"+ obj.value);
-
-  var tabValAttribut = [];
-  for (var i = 0; i < importedData.length; i++)
-  {
-    var valAttribut = importedData[i][obj.value];
-    if (!tabValAttribut.includes(valAttribut)) tabValAttribut.push(valAttribut);
-  }
-
-  tabValAttribut.sort()
-  for (var i = 0; i < tabValAttribut.length; i++)
-      div.innerHTML += "<option value='"+ i +"'>"+ tabValAttribut[i] +"</option>";
-
-  document.getElementById("selectFiltreColonne").selectedIndex = 0;
-}
-
-
-function appliquerFiltre()
+//ok
+//applique les filtres
+//doit partir des données importées
+function appliquerFiltres()
 {
   workingData = importedData;
-  workingData = FiltresColonnes(workingData);
+  workingData = FiltreColonnes(workingData);
   workingData = FiltrePeriode(workingData);
   workingData = FiltreCoord(workingData);
+  workingData = FiltreContient(workingData);
+  workingData = FiltreDoublon(workingData);
 }
+
+function FiltreContient(data)
+{
+  var idxColonneContient = document.getElementById('selectContient').value;
+  if (idxColonneContient == -1) return data;
+
+  var strFiltre = document.getElementById('texteContient').value;
+  var filteredData = [];
+
+  for (var i = 0; i < data.length; i++)
+  {
+    if (data[i][idxColonneContient].indexOf(strFiltre) > -1)
+      filteredData.push(data[i]);
+  }
+
+  return filteredData;
+}
+
+
+function FiltreDoublon(data)
+{
+  var tabEltec = [];
+  var filteredData = [];
+
+  if (!document.getElementById('supprimerDoublons').checked) return data;
+
+  for (var i = 0; i < data.length; i++)
+  {
+    var flag = true;
+
+    for (var j = 0; j < tabColonneEltec.length; j++)
+    {
+      if (!tabEltec.includes(data[i][tabColonneEltec[j]]))
+        tabEltec.push(data[i][tabColonneEltec[j]]);
+      else
+        flag = false;
+    }
+
+    if (flag)
+      filteredData.push(data[i]);
+  }
+
+  return filteredData;
+}
+
+
 
 function FiltrePeriode(data)
 {
@@ -140,7 +168,7 @@ function FiltrePeriode(data)
   return filteredData;
 }
 
-function FiltresColonnes(data)
+function FiltreColonnes(data)
 {
   var tabFilter = creerTabFiltres();
   var filteredData = [];
@@ -155,7 +183,6 @@ function FiltresColonnes(data)
       tabFlag.push(tabFilter[j].values.indexOf(tmp) > -1);
     }
 
-    //if ((config.filterAllCriteria && !tabFlag.includes(false)) || (!config.filterAllCriteria && tabFlag.includes(true)))
     if (!tabFlag.includes(false))
     {
       filteredData.push(data[i]);  
@@ -164,6 +191,23 @@ function FiltresColonnes(data)
   return filteredData; 
 }
 
+
+
+function resetCriteres()
+{
+  idxColonneCateg = -1;
+  tabColonneEltec = [];
+
+  fromSlider.value = 0;
+  toSlider.value = 100;
+  
+  afficherStats();
+}
+
+//fusionner supprimerFiltre et resetcritere
+//a l'import on doit appeler supprimerFiltre
+
+//reinitialise les filtres et autres éléments du form
 function supprimerFiltre()
 {
   var divFiltres = document.getElementById('filtres');
@@ -171,8 +215,11 @@ function supprimerFiltre()
   for (var i = divFiltres.childNodes.length - 1; i >= 0; i--)
     divFiltres.childNodes[i].remove();
 
-  document.getElementById('fromSlider').value = 0;
-  document.getElementById('toSlider').value = 100;
+  fromSlider.value = 0;
+  toSlider.value = 100;
+
+  //document.getElementById('fromSlider').value = 0;
+  //document.getElementById('toSlider').value = 100;
   
   document.getElementById('filtreCoord').value = '';
 
@@ -197,11 +244,19 @@ function creerTabFiltres()
 }
 
 
+
+
 function AfficherPeriode()
 {
   document.getElementById('infoSlider').innerHTML = 
   'Global : ' + startDateGlobal.toLocaleString() + ' - ' + endDateGlobal.toLocaleString() + '<br>' +
   'Periode : ' + startDatePeriode.toLocaleString() + ' - ' +  endDatePeriode.toLocaleString();
+}
+
+function afficherStats()
+{
+  document.getElementById('stats').innerHTML = 
+  'nbLignesImportees : ' + importedData.length + ' - nbLignesAffichees : ' + workingData.length;
 }
 
 function updatePeriode(fromSlider, toSlider)
@@ -250,8 +305,9 @@ function FiltreCoord(data)
 
 function buildBandeau(data)
 {
+  viderBandeau();
   var diff = endDateGlobal - startDateGlobal;
-  var largeur = 400;
+  var largeur = 800;
 
   for (var i = 0; i < data.length; i++)
   {
@@ -271,8 +327,3 @@ function drawLine(x)
   ctx.stroke();
 }
 
-function afficherStats()
-{
-  document.getElementById('stats').innerHTML = 
-  'nbLignesImportees : ' + importedData.length + ' - nbLignesAffichees : ' + workingData.length;
-}

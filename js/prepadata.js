@@ -225,53 +225,6 @@ function BuildRecurrenceHeureJour(tab)
   return data;
 }
 
-/*
-function BuildRecurrenceHeureMois(tab, idxColonne)
-{
-  var tabCateg = [];
-  var tmpdata = {}
-
-  for (var i = 0; i < tab.length; i++)
-  {
-    var date = tab[i][IDX_DATE];
-    
-    var tmpCateg = tab[i][idxColonne];
-    if (!tabCateg.includes(tmpCateg)) tabCateg.push(tmpCateg);
-
-    var jour = date.getDate();
-    var heure = date.getHours() + (date.getMinutes() / 60);
-
-    if (!(jour in tmpdata)) tmpdata[jour] = {};
-    if (!(heure in tmpdata[jour])) tmpdata[jour][heure] = {};
-    if (!(tmpCateg in tmpdata[jour][heure])) tmpdata[jour][heure][tmpCateg] = { value: 0, color: "" };
-
-    tmpdata[jour][heure][tmpCateg].value += 1;
-    tmpdata[jour][heure][tmpCateg].color = tabCouleur[tabCateg.indexOf(tmpCateg)];
-  }
-
-
-  var data = [];
-
-  for (var jour in tmpdata)
-  {
-    for (var heure in tmpdata[jour])
-    {
-      for (var categ in tmpdata[jour][heure])
-      {
-        data.push({
-          "id": "",
-          "title": categ,
-          "color": tmpdata[jour][heure][categ].color,
-          "x": parseInt(jour),
-          "y": parseFloat(heure),
-          "value": parseInt(tmpdata[jour][heure][categ].value)
-        });
-      }
-    }
-  }
-
-  return data;
-}*/
 
 
 function BuildRecurrenceHeureMois(tab)
@@ -350,14 +303,14 @@ function BuildRecurrenceJourMois(tab)
 }
 
 
-function buildRepartitionCateg(tab, idxColonne)
+function buildRepartitionCateg(tab, idxColonneCateg)
 {
   var tmpdata = [];
   var data = [];
 
   for (var i = 0; i < tab.length; i++)
   {
-    var tmp = tab[i][idxColonne];
+    var tmp = tab[i][idxColonneCateg];
     if (!(tmp in tmpdata)) tmpdata[tmp] = 0;
     tmpdata[tmp] += 1;
   }
@@ -371,7 +324,7 @@ function buildRepartitionCateg(tab, idxColonne)
 }
 
 
-function buildGanttCateg(tab, idxColonne)
+function buildGanttCateg(tab, idxColonneCateg)
 {
   var data = [];
   var diff = endDatePeriode - startDatePeriode;
@@ -379,7 +332,7 @@ function buildGanttCateg(tab, idxColonne)
 
   for (var i = 0; i < tab.length; i++)
   {
-    var categ = tab[i][idxColonne];
+    var categ = tab[i][idxColonneCateg];
 
     var dateDebut = getYMD(tab[i][IDX_DATE]);
     var dateFin = getYMD(addSeconds(tab[i][IDX_DATE], diff));

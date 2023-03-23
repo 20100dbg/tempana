@@ -108,13 +108,13 @@ function GraphEvolutionGlobaleCumulative(data)
 
 function GraphEvolutionPeriodeCateg(data)
 {
-  if (idxColonne == -1) return;
+  if (idxColonneCateg == -1) return;
 
   var container = document.getElementById("chart2");
   var root = am5.Root.new(container);
   root.setThemes([ am5themes_Kelly.new(root) ]);
 
-  data = buildEvolutionCateg(data, idxColonne, idxUnitePeriode);
+  data = buildEvolutionCateg(data, idxColonneCateg, idxUnitePeriode);
 
   var chart = root.container.children.push(am5xy.XYChart.new(root, {
     panX: false,
@@ -192,7 +192,7 @@ function GraphEvolutionPeriodeCateg(data)
 
 function GraphEvolutionGlobaleCateg(data)
 {
-  if (idxColonne == -1) return;
+  if (idxColonneCateg == -1) return;
 
   var container = document.getElementById("chart3");
   var root = am5.Root.new(container);
@@ -226,7 +226,7 @@ function GraphEvolutionGlobaleCateg(data)
     })
   );
 
-  data = buildEvolutionGlobaleCateg(data, idxColonne);
+  data = buildEvolutionGlobaleCateg(data, idxColonneCateg);
 
 
   for (var serie in data)
@@ -308,7 +308,7 @@ function GraphEvolutionGlobaleCateg(data)
 
 function GraphEvolutionGlobaleCumulativeCateg(data)
 {
-  if (idxColonne == -1) return;
+  if (idxColonneCateg == -1) return;
 
   var container = document.getElementById("chart10");
   var root = am5.Root.new(container);
@@ -342,7 +342,7 @@ function GraphEvolutionGlobaleCumulativeCateg(data)
     })
   );
 
-  data = buildEvolutionGlobaleCumulativeCateg(data, idxColonne);
+  data = buildEvolutionGlobaleCumulativeCateg(data, idxColonneCateg);
 
   for (var serie in data)
   {
@@ -774,7 +774,7 @@ function GraphRecurrenceJourMois(data)
 
 function GraphRepartitionCateg(data)
 {
-  if (idxColonne == -1) return;
+  if (idxColonneCateg == -1) return;
 
   var container = document.getElementById("chart11");
   var root = am5.Root.new(container);
@@ -787,7 +787,7 @@ function GraphRepartitionCateg(data)
     categoryField: "category"
   }));
 
-  data = buildRepartitionCateg(data, idxColonne);
+  data = buildRepartitionCateg(data, idxColonneCateg);
 
   series.data.setAll(data);
 
@@ -799,7 +799,7 @@ function GraphRepartitionCateg(data)
 
 function GraphGanttCateg(data)
 {
-  if (idxColonne == -1) return;
+  if (idxColonneCateg == -1) return;
 
   var container = document.getElementById("chart12");
   var root = am5.Root.new(container);
@@ -823,11 +823,11 @@ function GraphGanttCateg(data)
 
   var colors = chart.get("colors");
 
-  var tmptabCateg = buildTabValeurs(data, idxColonne);
+  var tmptabCateg = buildTabValeurs(data, idxColonneCateg);
   var tabCateg = [];
   for (var i = 0; i < tmptabCateg.length; i++) tabCateg.push({category:tmptabCateg[i]});
 
-  data = buildGanttCateg(data, idxColonne);
+  data = buildGanttCateg(data, idxColonneCateg);
 
   for (var i = 0; i < data.length; i++)
   {

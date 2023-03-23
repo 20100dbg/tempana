@@ -119,19 +119,20 @@ function getYMD(date)
 
 
 
-function finalGetDate(date, type, fillDefault)
+function GetStringDate(date, type, fillDefault)
 {
-  var template = '%year%-%month%-%day% %hour%:%minute%:%second%.%millisecond%';
-  var template_week = '%year%-%week%';
+  //var template = '%year%-%month%-%day% %hour%:%minute%:%second%.%millisecond%';
+  //var template_week = '%year%-%week%';
   var template_defaut = '0001-01-01 00:00:00.0';
   var sdate = date.toISOString().replace('T', ' ');
 
   var year = date.getFullYear();
-  var month = (val.getMonth() + 1 < 10) ? '0' + (val.getMonth() + 1) : val.getMonth() + 1;
-  var day = (val.getDate() < 10) ? '0' + val.getDate() : val.getDate();
-  var hour = (val.getHours() < 10) ? '0' + val.getHours() : val.getHours();
-  var minute = (val.getMinutes() < 10) ? '0' + val.getMinutes() : val.getMinutes();
-  var time = val.getTime();
+  var month = (date.getMonth() + 1 < 10) ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
+  var day = (date.getDate() < 10) ? '0' + date.getDate() : date.getDate();
+  var hour = (date.getHours() < 10) ? '0' + date.getHours() : date.getHours();
+  var minute = (date.getMinutes() < 10) ? '0' + date.getMinutes() : date.getMinutes();
+  var time = date.getTime();
+  var week = date.getWeek();
 
   var idx = 0;
   if (type == 'year') idx = 4;
@@ -141,9 +142,12 @@ function finalGetDate(date, type, fillDefault)
   else if (type == 'minute') idx = 16;
   else if (type == 'second') idx = 19;
   else if (type == 'millisecond') idx = sdate.length - 1;
-  else if (type == 'week') idx = sdate.length - 1;
-  
+  else if (type == 'week') idx = 4;
   sdate = sdate.substring(0, idx);
-  if (fillDefault && type != 'week') sdate += template.substring(idx);
+  
+  if (type == 'week') sdate += '-' + week;
+  else if (type == 'time') sdate = date.getTime();
+  else if (fillDefault) sdate += template_defaut.substring(idx);
 
+  return sdate;
 }

@@ -1,11 +1,11 @@
-function DessinerPoints(tab)
+function DessinerPoints(tabPoints)
 {
     for (var i = 0; i < layersPoints.length; i++) layersPoints[i].remove();
     layersPoints = [];
 
-    for (var i = 0; i < tab.length; i++)
+    for (var i = 0; i < tabPoints.length; i++)
     {
-        var pointObj = getPointObj(tab[i]);
+        var pointObj = getPointObj(tabPoints[i]);
         layersPoints.push(L.circle([pointObj.lat, pointObj.lng], {radius: 100, fill: true}).addTo(map));
     }
 }
@@ -26,7 +26,7 @@ function FiltreCoord(tabPoints)
             {
                 if (IsInsideCircle(pointObj, tabPolygons[j]._latlng, tabPolygons[j]._mRadius))
                 {
-                    tabFiltre.push(tabPoints[i])
+                    tabFiltre.push(tabPoints[i]);
                     flagAdded = true;
                 }
             }
@@ -34,7 +34,7 @@ function FiltreCoord(tabPoints)
             {
                 if (IsInsidePolygon(pointObj, tabPolygons[j]._latlngs[0]))
                 {
-                    tabFiltre.push(tabPoints[i])
+                    tabFiltre.push(tabPoints[i]);
                     flagAdded = true;
                 }
             }

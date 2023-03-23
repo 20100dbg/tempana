@@ -46,7 +46,7 @@ input[type="range"] {
   -webkit-appearance: none; 
   appearance: none;
   height: 2px;
-  width: 400px;
+  width: 800px;
   position: absolute;
   background-color: #C6C6C6;
   pointer-events: none;

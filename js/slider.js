@@ -53,9 +53,17 @@ fromSlider.oninput = () =>
 {
   controlFromSlider(fromSlider, toSlider);
   updatePeriode(fromSlider, toSlider);
+
+  workingData = FiltrePeriode(importedData);
+  DessinerPoints(workingData);
+  afficherStats();
 }
 toSlider.oninput = () => 
 {
   controlToSlider(fromSlider, toSlider);
   updatePeriode(fromSlider, toSlider);
+
+  workingData = FiltrePeriode(importedData);
+  DessinerPoints(workingData);
+  afficherStats();
 }

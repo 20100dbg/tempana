@@ -29,8 +29,8 @@ function importerFichier(file)
     centrerVue(importedData);
 
     buildBandeau(importedData);
-    workingData = importedData;
 
+    workingData = importedData;
     afficherStats();
   }
 
@@ -171,22 +171,4 @@ function nettoyerLigne(tab)
   }
 
   return tab;
-}
-
-
-function dropHandler(ev)
-{
-  ev.preventDefault();
-  if (ev.dataTransfer.items)
-    importerFichier(ev.dataTransfer.files[0]);
-}
-
-function dragOverHandler(ev) { ev.preventDefault(); }
-
-
-function importerFichierEvent()
-{
-  var fileInput = document.getElementById('fileInput');
-  if (fileInput.files)
-    importerFichier(fileInput.files[0]);
 }
