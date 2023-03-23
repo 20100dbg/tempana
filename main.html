@@ -41,18 +41,18 @@
       <div class="container">
       <div class="row">
       <div class="col">
-      Colonne étudiée <select id="selectCateg" onchange="changeColonneCateg(this);"></select><br>
+      Colonne étudiée <select id="selectCateg"></select><br>
       </div>
       <div class="col">
       Colonne eltec <select id="selectEltec" multiple onchange="changeColonneEltec(this);"></select><br>
       </div>
       <div class="col">
-      Colonne filtre "contient" <select id="selectContient" onchange="changeColonneContient(this);"></select>
+      Colonne filtre "contient" <select id="selectContient"></select>
       <input type="text" id="texteContient"><br>
       </div>
 
       <div class="col">
-      Regrouper par <select id="selectUnitePeriode" onchange="changeUnitePeriode(this);">
+      Regrouper par <select id="selectUnitePeriode">
         <option value="0">Annee</option>
         <option value="1" selected>Mois</option>
         <option value="2">Semaine</option>
@@ -65,7 +65,7 @@
       </div>
 
       <div class="col">
-      Unite de temps <select id="selectUniteTemps" onchange="changeUniteTemps(this);">
+      Unite de temps <select id="selectUniteTemps">
         <option value="year">Annee</option>
         <option value="month">Mois</option>
         <option value="week">Semaine</option>
@@ -75,7 +75,7 @@
         <option value="second">Seconde</option>
         <option value="millisecond">Millisecondes</option>
       </select>
-      <input type="number" id="nbUniteTemps" value="1" onchange="changeNbUniteTemps(this);">
+      <input type="number" id="nbUniteTemps" value="1">
       </div>
       <div class="col">
         <label for="supprimerDoublons"><input type="checkbox" id="supprimerDoublons"> Supprimer les doublons</label>

@@ -33,24 +33,14 @@ function creerNomsColonnes()
   for (var i = 0; i < divs.length; i++) divs[i].innerHTML = nomEltec;
 }
 
-function changeColonneCateg(obj) { idxColonneCateg = obj.value; }
-
-function changeUnitePeriode(obj) { idxUnitePeriode = obj.value; }
-
-function changeUniteTemps(obj) { uniteTemps = obj.value; }
-
-function changeNbUniteTemps(obj) { nbUniteTemps = obj.value; }
-
 function changeColonneEltec(obj)
 {
   tabColonneEltec = [];
 
   for (var i = 0; i < obj.options.length; i++)
     if (obj.options[i].selected)
-      tabColonneEltec.push(obj.options[i].value);
+      tabColonneEltec.push(parseInt(obj.options[i].value));
 }
-
-function changeColonneContient(obj) { idxColonneContient = obj.value; }
 
 function remplirForm(tabCriteres)
 {

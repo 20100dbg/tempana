@@ -7,7 +7,8 @@ function importerFichier(file)
   {
     var filename = file.name;
     var ext = filename.substring(filename.lastIndexOf('.'));
-    document.getElementById('nomFichierImport').innerHTML = filename;
+    var divFilename = document.getElementById('nomFichierImport');
+    divFilename.innerHTML = filename;
 
     if (filename.indexOf('CITHARE') > -1) importedData = importerCITHARE(fileReader.result);
     else if (filename.indexOf('wireshark') > -1) importedData = importerWIRESHARK(fileReader.result);
@@ -17,6 +18,15 @@ function importerFichier(file)
       alert("Format inconnu");
       importedData = [];
     }
+    if (importedData.length == 0)
+    {
+      divFilename.classList.add("error");
+      divFilename.innerHTML = "format non reconnu ! Faut-il spécifier 'cithare' ou 'wireshark' dans le nom de fichier ?";
+      return;
+    }
+    else
+      divFilename.classList.remove("error");
+
 
     importedData.sort(function(a,b) { return a[IDX_DATE] > b[IDX_DATE] });
     startDateGlobal = importedData[0][IDX_DATE];
@@ -40,35 +50,54 @@ function importerFichier(file)
 
 function importerWIRESHARK(txt)
 {
-  var d = new Date().toJSON().replace('T', ' ').substring(0, 19);
-  var s = prompt('Indiquer la date/heure de début de la capture.\nFormat : yyyy-mm-dd hh:mm:ss', d);
-  
-  if (s == null) dateDebut = new Date(d);
-  else dateDebut = new Date(s);
-  if (dateDebut == "Invalid Date") dateDebut = new Date();
-  
-
-  var lines = txt.split('\n');
   var data = [];
   var tabPad = ["",""];
+  var lines = txt.split('\n');
 
   var tabCriteres = lines[0].trim().split(',');
   for (var j = 0; j < tabCriteres.length; j++) tabCriteres[j] = tabCriteres[j].replace(/^"+|"+$/g, '');
   tabCriteres = tabPad.concat(tabCriteres.slice(1));
   remplirForm(tabCriteres);
 
+  //détection du format du fichier wireshark
+  //la colonne time contient soit le nombre de secondes depuis le début de la capture
+  //soit un datetime complet avec millisecondes
+  var tmpTest = lines[1].trim().split('","');
+  tmpTest = tmpTest[1].replace(',','.');
+  tmpTest = new Date(tmpTest);
+  var colonneSeconds = (tmpTest  == "Invalid Date");
+
+  if (colonneSeconds)
+  {  
+    var d = new Date().toJSON().replace('T', ' ').substring(0, 19);
+    var s = prompt('Indiquer la date/heure de début de la capture.\nFormat : yyyy-mm-dd hh:mm:ss', d);
+    
+    if (s == null) dateDebut = new Date(d);
+    else dateDebut = new Date(s);
+    if (dateDebut == "Invalid Date") dateDebut = new Date();
+  }
+
+
   for (var i = 1; i < lines.length; i++)
   {
     if (lines[i] == "") continue;
 
-    var tab = lines[i].trim().split(',');
+    var tab = lines[i].trim().split('","');
     tab = tabPad.concat(tab.slice(1));
 
     for (var j = 0; j < tab.length; j++) tab[j] = tab[j].replace(/^"+|"+$/g, '');
 
-    var tmp = parseFloat(tab[IDX_DATE]);
-    var time = dateDebut.getTime() + (tmp * 1000);
-    tab[IDX_DATE] = new Date(time);
+    if (colonneSeconds)
+    {
+      var tmp = parseFloat(tab[IDX_DATE]);
+      var time = dateDebut.getTime() + (tmp * 1000);
+      tab[IDX_DATE] = new Date(time);
+    }
+    else
+    {
+      tab[IDX_DATE] = new Date(tab[IDX_DATE].replace(',','.'));
+    }
+
     data.push(tab);
   }
 
@@ -146,6 +175,7 @@ function importerCSV(txt)
 function convertirDate(s)
 {
   var retour = null;
+  if (s == null) return retour;
 
   if (s.match(/[0-9]{2}\/[0-9]{2}\/[0-9]{4} [0-9]{2}:[0-9]{2}:?[0-9]{0,2}/)) //format excel 31/01/2023 10:30
   {

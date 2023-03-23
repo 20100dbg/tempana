@@ -159,7 +159,7 @@ function GraphEvolutionPeriodeCateg(data)
     }));
 
   series.columns.template.setAll({
-    tooltipText: "{name}, {categoryX}:{valueY}",
+    tooltipText: "{name}, {categoryX} : {valueY}",
     width: am5.percent(90),
     tooltipY: 0
   });
@@ -533,7 +533,7 @@ yRenderer.labels.template.setAll({
 
   var series = chart.series.push(am5radar.RadarColumnSeries.new(root, {
     calculateAggregates: true,
-    stroke: am5.color(0xffffff),
+    stroke: am5.color(0xffffff), //0xfffbbf
     clustered: false,
     xAxis: xAxis,
     yAxis: yAxis,
@@ -565,7 +565,7 @@ yRenderer.labels.template.setAll({
     { hour: "17h" },{ hour: "18h" },{ hour: "19h" },{ hour: "20h" },{ hour: "21h" },{ hour: "22h" },
     { hour: "23h" }]);
 
-  chart.appear(1000, 100);
+  chart.appear();
 }
 
 
