@@ -50,10 +50,21 @@ window.onload = function() {
 function creerFiltreEtGraphiques()
 {
   viderGraphiques();
+  creerSelectColonne();
   appliquerFiltres();
   creerNomsColonnes();
   creerGraphiques();
   afficherStats();
+}
+
+function creerSelectColonne()
+{
+  idxColonneCateg = document.getElementById('selectCateg').value;
+  idxColonneContient = document.getElementById('selectContient').value;
+  idxUnitePeriode = document.getElementById('selectUnitePeriode').value;
+  uniteTemps = document.getElementById('selectUniteTemps').value;
+  nbUniteTemps = document.getElementById('nbUniteTemps').value;
+
 }
 
 
@@ -115,17 +126,19 @@ function FiltreContient(data)
   if (idxColonneContient == -1) return data;
 
   var strFiltre = document.getElementById('texteContient').value;
+  strFiltre = strFiltre.toLocaleLowerCase();
   var filteredData = [];
 
   for (var i = 0; i < data.length; i++)
   {
-    if (data[i][idxColonneContient].indexOf(strFiltre) > -1)
+    var str = data[i][idxColonneContient].toLocaleLowerCase();
+
+    if (str.indexOf(strFiltre) !== -1)
       filteredData.push(data[i]);
   }
 
   return filteredData;
 }
-
 
 function FiltreDoublon(data)
 {
@@ -137,23 +150,20 @@ function FiltreDoublon(data)
   for (var i = 0; i < data.length; i++)
   {
     var flag = true;
+    var str = '';
 
     for (var j = 0; j < tabColonneEltec.length; j++)
-    {
-      if (!tabEltec.includes(data[i][tabColonneEltec[j]]))
-        tabEltec.push(data[i][tabColonneEltec[j]]);
-      else
-        flag = false;
-    }
+      str += data[i][tabColonneEltec[j]];
 
-    if (flag)
+    if (!tabEltec.includes(str)) 
+    {
+      tabEltec.push(str);
       filteredData.push(data[i]);
+    }
   }
 
   return filteredData;
 }
-
-
 
 function FiltrePeriode(data)
 {
@@ -220,8 +230,6 @@ function supprimerFiltre()
 
   //document.getElementById('fromSlider').value = 0;
   //document.getElementById('toSlider').value = 100;
-  
-  document.getElementById('filtreCoord').value = '';
 
   workingData = importedData;
 }

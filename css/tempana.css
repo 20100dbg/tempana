@@ -26,5 +26,8 @@ font-weight: bold;
 
 #nomFichierImport {
   font-weight: bold;
-  
+}
+
+.error {
+ color: #ff0000;
 }
