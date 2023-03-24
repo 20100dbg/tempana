@@ -58,8 +58,8 @@ quand import de nouveau fichier : vider les forms
 - filtres colonnes
 - reset des idx...
 
-options :
-- filtre "contains" sur une colonne
-- supprimer doublons des eltecs
 
-revoir la méthode doublon. Calquer sur la méthode excel
+bugs :
+- filtreContient fait diminuer le nombre de retour à chaque itération
+- filtrePeriode : les dates dans filteredData ont des secondes en plus
+

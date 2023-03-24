@@ -40,7 +40,7 @@ function importerFichier(file)
 
     buildBandeau(importedData);
 
-    workingData = importedData;
+    workingData = [...importedData];
     afficherStats();
   }
 
@@ -100,6 +100,7 @@ function importerWIRESHARK(txt)
 
     data.push(tab);
   }
+
 
   return data;
 }

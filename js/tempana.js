@@ -64,7 +64,6 @@ function creerSelectColonne()
   idxUnitePeriode = document.getElementById('selectUnitePeriode').value;
   uniteTemps = document.getElementById('selectUniteTemps').value;
   nbUniteTemps = document.getElementById('nbUniteTemps').value;
-
 }
 
 
@@ -112,11 +111,13 @@ function viderBandeau()
 //doit partir des données importées
 function appliquerFiltres()
 {
-  workingData = importedData;
+  workingData = [...importedData];
   workingData = FiltreColonnes(workingData);
   workingData = FiltrePeriode(workingData);
   workingData = FiltreCoord(workingData);
   workingData = FiltreContient(workingData);
+  //dumpcsv(workingData);
+
   workingData = FiltreDoublon(workingData);
 }
 
@@ -178,6 +179,17 @@ function FiltrePeriode(data)
   return filteredData;
 }
 
+function dumpcsv(data)
+{
+  var obj = document.getElementById('dump');
+  obj.value = '';
+
+  for (var i = 0; i < data.length; i++)
+  {
+    obj.value += data[i][IDX_DATE].toISOString() + '\n';
+  }  
+}
+
 function FiltreColonnes(data)
 {
   var tabFilter = creerTabFiltres();
@@ -231,7 +243,7 @@ function supprimerFiltre()
   //document.getElementById('fromSlider').value = 0;
   //document.getElementById('toSlider').value = 100;
 
-  workingData = importedData;
+  workingData = [...importedData];
 }
 
 function creerTabFiltres()
