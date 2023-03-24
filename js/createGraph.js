@@ -491,7 +491,7 @@ function GraphElementsActifs(data)
 }
 
 
-function GraphRecurrenceHeureJour(data)
+function GraphRecurrenceHeureJourSemaine(data)
 {
   var container = document.getElementById("chart5");
   var root = am5.Root.new(container);
@@ -554,7 +554,7 @@ yRenderer.labels.template.setAll({
     key: "fill"
   }]);
 
-  data = BuildRecurrenceHeureJour(data);
+  data = BuildRecurrenceHeureJourSemaine(data);
 
   series.data.setAll(data);
   yAxis.data.setAll([{ weekday: "Lundi" },{ weekday: "Mardi" },{ weekday: "Mercredi" },
@@ -772,6 +772,7 @@ function GraphRecurrenceJourMois(data)
   chart.appear();
 }
 
+
 function GraphRepartitionCateg(data)
 {
   if (idxColonneCateg == -1) return;
@@ -877,6 +878,70 @@ function GraphGanttCateg(data)
     dateFields: ["fromDate", "toDate"],
     dateFormat: "yyyy-MM-dd HH:mm:ss"
   });
+  series.data.setAll(data);
+
+  series.appear();
+  chart.appear();
+}
+
+
+
+
+function GraphRecurrenceHeureJour(data)
+{
+  var container = document.getElementById("chart13");
+  var root = am5.Root.new(container);
+  root.setThemes([ am5themes_Animated.new(root) ]);
+
+  var chart = root.container.children.push(am5xy.XYChart.new(root, {
+    panX: false,
+    panY: false,
+    wheelX: "panX",
+    wheelY: "zoomX",
+  }));
+
+  var cursor = chart.set("cursor", am5xy.XYCursor.new(root, { behavior: "zoomX" }));
+  cursor.lineY.set("visible", false);
+
+  var xRenderer = am5xy.AxisRendererX.new(root, { minGridDistance: 30 });
+  xRenderer.labels.template.setAll({
+    rotation: -90,
+    centerY: am5.p50,
+    centerX: am5.p100,
+    paddingRight: 15
+  });
+
+  xRenderer.grid.template.setAll({ location: 1 });
+
+  var xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root, {
+    maxDeviation: 0.3,
+    categoryField: "date",
+    renderer: xRenderer,
+    tooltip: am5.Tooltip.new(root, {})
+  }));
+
+  var yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
+    maxDeviation: 0.3,
+    renderer: am5xy.AxisRendererY.new(root, {
+      strokeOpacity: 0.1
+    })
+  }));
+
+  var series = chart.series.push(am5xy.ColumnSeries.new(root, {
+    name: "Series 1",
+    xAxis: xAxis,
+    yAxis: yAxis,
+    valueYField: "value",
+    sequencedInterpolation: true,
+    categoryXField: "date",
+    tooltip: am5.Tooltip.new(root, {
+      labelText: "{valueY}"
+    })
+  }));
+
+  data = BuildRecurrenceHeureJour(data);
+
+  xAxis.data.setAll(data);
   series.data.setAll(data);
 
   series.appear();

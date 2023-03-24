@@ -54,7 +54,7 @@ function buildEvolutionCateg(tab, colonneSerie, unitePeriode)
 
   for (var i = 0; i < tab.length; i++)
   {
-    var tmpDate = GetStringDate(tab[i][IDX_DATE], unitePeriode, true);
+    var tmpDate = GetStringDate(tab[i][IDX_DATE], unitePeriode);
     
     var flag = false;
     for (var j = 0; j < data.length && !flag; j++) {
@@ -179,7 +179,7 @@ function buildElementsActifs(tab)
 }
 
 
-function BuildRecurrenceHeureJour(tab)
+function BuildRecurrenceHeureJourSemaine(tab)
 {
   var tmpdata = {};
 
@@ -336,6 +336,28 @@ function buildGanttCateg(tab, idxColonneCateg)
       fromDate: dateDebut,
       toDate: dateFin
     });
+  }
+
+  return data;
+}
+
+
+
+function BuildRecurrenceHeureJour(tab)
+{
+  var tmpdata = {}
+
+  for (var i = 0; i < 24; i++) tmpdata[i] = 0;
+
+  for (var i = 0; i < tab.length; i++)
+  {
+    tmpdata[tab[i][IDX_DATE].getHours()] += 1;
+  }
+
+  var data = [];
+  for (var heure in tmpdata)
+  {
+    data.push({ date: heure, value: tmpdata[heure] });
   }
 
   return data;

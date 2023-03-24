@@ -56,6 +56,7 @@ fromSlider.oninput = () =>
 
   workingData = FiltrePeriode(importedData);
   DessinerPoints(workingData);
+  DrawHeatmap(workingData);
   afficherStats();
 }
 toSlider.oninput = () => 
@@ -65,5 +66,6 @@ toSlider.oninput = () =>
 
   workingData = FiltrePeriode(importedData);
   DessinerPoints(workingData);
+  DrawHeatmap(workingData);
   afficherStats();
 }

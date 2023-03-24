@@ -1,4 +1,4 @@
-var map;
+var map, heatmapLayer;
 var layersPoints = [];
 var importedData = [], workingData = [];
 var tabUniteTemps = ["year", "month", "week", "day", "hour", "minute", "second", "millisecond"];
@@ -20,6 +20,7 @@ var IDX_LAT = 0;
 var IDX_LNG = 1;
 var IDX_DATE = 2;
 var IDX_DATE_FIN = 3;
+var IDX_COUNT = -1;
 var offsetColonne = 3;
 
 //ok
@@ -27,16 +28,26 @@ var offsetColonne = 3;
 window.onload = function() {
 
     remplirSelectUniteTemps();
+    //map.addLayer(heatmapLayer);
+
+    var heatmapcfg = {
+      "radius": 0.6,
+      "maxOpacity": .8,
+      "scaleRadius": true,
+      "useLocalExtrema": false,
+      latField: 'lat', lngField: 'lng', valueField: 'count'
+    };
 
     //'carto/{z}/{x}/{y}.png'
     //'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
     var baseLayer = L.tileLayer('carto/{z}/{x}/{y}.png', { });
+    heatmapLayer = new HeatmapOverlay(heatmapcfg);
     
     map = new L.Map('map', {
       editable: true,
       center: {lat:48.89, lng:7.8},
       zoom: 10,
-      layers: [baseLayer]
+      layers: [baseLayer, heatmapLayer]
     });
     L.control.scale({imperial:false}).addTo(map);
 
@@ -57,6 +68,8 @@ function creerFiltreEtGraphiques()
   creerNomsColonnes();
   creerGraphiques();
   afficherStats();
+
+  DrawHeatmap(workingData);
 }
 
 function creerSelectColonne()
@@ -77,8 +90,10 @@ function creerGraphiques()
   GraphEvolutionGlobaleCumulative(workingData);
   
   GraphRecurrenceHeureJour(workingData);
-  GraphRecurrenceSemaine(workingData);
   GraphRecurrenceJourMois(workingData);
+  GraphRecurrenceSemaine(workingData);
+
+  GraphRecurrenceHeureJourSemaine(workingData);
   GraphRecurrenceHeureMois(workingData);
 
   GraphEvolutionPeriodeCateg(workingData);
@@ -350,3 +365,24 @@ function drawLine(x)
   ctx.stroke();
 }
 
+
+
+function GetHeatDataObject(tab)
+{
+  var max = 0;
+  var data = [];
+
+  for (var i = 0; i < tab.length; i++)
+  {
+    var c = (IDX_COUNT > -1) ? tab[i][IDX_COUNT] : 1;
+    if (max < c) max = c;
+    data.push(getPointObj(tab[i]));
+  }
+
+  return { max: max + 1, data: data };
+}
+
+function DrawHeatmap(data)
+{
+  heatmapLayer.setData(GetHeatDataObject(data));
+}
