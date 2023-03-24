@@ -111,7 +111,7 @@ function appliquerFiltres()
 
 function FiltreContient(data)
 {
-  var idxColonneContient = document.getElementById('selectContient').value;
+  var idxColonneContient = parseInt(document.getElementById('selectContient').value);
   if (idxColonneContient == -1) return data;
 
   var strFiltre = document.getElementById('texteContient').value;

@@ -47,7 +47,7 @@ function changeColonneEltec(obj)
 
   for (var i = 0; i < obj.options.length; i++)
     if (obj.options[i].selected)
-      tabColonneEltec.push(obj.options[i].value);
+      tabColonneEltec.push(parseInt(obj.options[i].value));
 }
 
 function changeColonneContient(obj) { idxColonneContient = obj.value; }
