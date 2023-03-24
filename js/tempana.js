@@ -69,7 +69,10 @@ function creerFiltreEtGraphiques()
   creerGraphiques();
   afficherStats();
 
-  DrawHeatmap(workingData);
+  
+  DrawHeatmap(importedData);
+  //DessinerPoints(importedData);
+
 }
 
 function creerSelectColonne()
@@ -222,9 +225,7 @@ function FiltreColonnes(data)
 }
 
 
-
-//reinitialise les filtres et autres éléments du form
-function supprimerFiltre()
+function resetForm()
 {
   var divFiltres = document.getElementById('filtres');
 
@@ -236,6 +237,12 @@ function supprimerFiltre()
   document.getElementById('selectContient').innerHTML = '';
   document.getElementById('texteContient').value = '';
 
+  workingData = [...importedData];
+  afficherStats();
+}
+
+function resetFiltresEtSelect()
+{
   idxColonneCateg = -1;
   tabColonneEltec = [];
 
@@ -255,12 +262,9 @@ function supprimerFiltre()
   fromSlider.value = 0;
   toSlider.value = 100;
   viderBandeau();
-
-  workingData = [...importedData];
-
   AfficherPeriode();
-  afficherStats();
 }
+
 
 
 function creerTabFiltres()

@@ -1,6 +1,7 @@
 function importerFichier(file)
 {
-  supprimerFiltre();
+  resetForm();
+  resetFiltresEtSelect();
   var fileReader = new FileReader();
 
   fileReader.onload = function (e)
@@ -39,6 +40,7 @@ function importerFichier(file)
     DessinerPoints(importedData);
     centrerVue(importedData);
 
+    AffichierPrevisualisation(importedData);
     buildBandeau(importedData);
 
     workingData = [...importedData];
@@ -46,6 +48,17 @@ function importerFichier(file)
   }
 
   fileReader.readAsText(file);
+}
+
+function AffichierPrevisualisation(importedData)
+{
+  var obj = document.getElementById('previsualisation');
+  obj.value = '';
+
+  for (var i = 0; i < 4 && i < importedData.length; i++)
+  {
+    obj.value += importedData[i].slice(offsetColonne).join('\t') + '\n';
+  }
 }
 
 

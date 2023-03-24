@@ -79,7 +79,7 @@ function remplirSelectCategorie(tabCriteres)
 function remplirSelectFiltreColonne(tabCriteres)
 {
   var div = document.getElementById('selectFiltreColonne');
-  div.innerHTML = '<option value="-1">Choix filtre</option>';
+  div.innerHTML = '<option value="-1">Choix colonne</option>';
   for (var i = 0; i < tabCriteres.length; i++)  
     div.innerHTML += '<option value="'+ (i + offsetColonne) +'">' + tabCriteres[i] + '</options>';
 }
@@ -110,7 +110,7 @@ function ajouterFormFiltre(obj)
   div = document.getElementById("div-"+ obj.value);
   div.innerHTML = '<b>' + obj.item(obj.selectedIndex).text + '</b><br>' +
                   '<select id="values-'+ obj.value +'" multiple></select><br>' +
-                  '<button onclick="supprimerFiltre(\''+ obj.value +'\')">Supprimer filtre</button>';
+                  '<button onclick="supprimerFiltreColonne(\''+ obj.value +'\')">Supprimer filtre</button>';
 
   div = document.getElementById("values-"+ obj.value);
 
@@ -126,4 +126,9 @@ function ajouterFormFiltre(obj)
       div.innerHTML += "<option value='"+ i +"'>"+ tabValAttribut[i] +"</option>";
 
   document.getElementById("selectFiltreColonne").selectedIndex = 0;
+}
+
+function supprimerFiltreColonne(id)
+{
+  document.querySelector("#div-" + id).outerHTML = '';
 }
