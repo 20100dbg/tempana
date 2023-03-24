@@ -42,14 +42,13 @@ function changeColonneEltec(obj)
       tabColonneEltec.push(parseInt(obj.options[i].value));
 }
 
-function remplirForm(tabCriteres)
+function remplirForm(tab)
 {
-  var tabCriteres = buildTabCriteres(tabCriteres);
-  remplirSelectCategorie(tabCriteres);
-  remplirSelectFiltreColonne(tabCriteres);
-  remplirSelectEltec(tabCriteres);
-  remplirSelectContient(tabCriteres);
-
+  tabHeaders = buildTabCriteres(tab);
+  remplirSelectCategorie(tabHeaders);
+  remplirSelectFiltreColonne(tabHeaders);
+  remplirSelectEltec(tabHeaders);
+  remplirSelectContient(tabHeaders);
 }
 
 function remplirSelectUniteTemps()

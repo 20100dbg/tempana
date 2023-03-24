@@ -31,7 +31,8 @@
   <div class="row">
     <div class="col cadre">
       Prévisualisation<br>
-      <textarea rows="4" cols="140" wrap="off" readonly id="previsualisation"></textarea>
+      <div id="previsualisation"></div>
+      <!--<textarea rows="4" cols="140" wrap="off" readonly id="previsualisation"></textarea>-->
     </div>
   </div>
 
@@ -57,6 +58,7 @@
       <div class="col">
       Colonne filtre "contient" <select id="selectContient"></select>
       <input type="text" id="texteContient"><br>
+      <label for="inverserContient"><input type="checkbox" id="inverserContient"> inverser</label>
       </div>
 
       <div class="col">
@@ -244,6 +246,7 @@
 <script src="js/createGraph.js"></script>
 <script src="js/tempana.js"></script>
 <script src="js/tempana_form.js"></script>
+<script src="js/tempana_filtre.js"></script>
 <script src="js/import.js"></script>
 <script src="js/prepahelper.js"></script>
 <script src="js/prepadata.js"></script>

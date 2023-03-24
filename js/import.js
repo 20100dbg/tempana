@@ -53,12 +53,27 @@ function importerFichier(file)
 function AffichierPrevisualisation(importedData)
 {
   var obj = document.getElementById('previsualisation');
-  obj.value = '';
+  var str = '<table class="table table-sm"><thead><tr>';
 
-  for (var i = 0; i < 4 && i < importedData.length; i++)
+  for (var i = 0; i < tabHeaders.length; i++)
   {
-    obj.value += importedData[i].slice(offsetColonne).join('\t') + '\n';
+    str += '<th scope="col">'+ tabHeaders[i] +'</th>';
   }
+  str += '</tr></thead><tbody>';
+
+  for (var i = 0; i < 4; i++)
+  {
+    str += '<tr>';
+    var tabtmp = importedData[i].slice(offsetColonne);
+
+    for (var j = 0; j < tabtmp.length; j++)
+      str += '<td>'+ tabtmp[j] +'</td>';
+
+    str += '</tr>';
+  }
+
+  str += '</tbody></table>';
+  obj.innerHTML = str;
 }
 
 
@@ -68,10 +83,10 @@ function importerWIRESHARK(txt)
   var tabPad = ["",""];
   var lines = txt.split('\n');
 
-  var tabCriteres = lines[0].trim().split(',');
-  for (var j = 0; j < tabCriteres.length; j++) tabCriteres[j] = tabCriteres[j].replace(/^"+|"+$/g, '');
-  tabCriteres = tabPad.concat(tabCriteres.slice(1));
-  remplirForm(tabCriteres);
+  var tabHeaders = lines[0].trim().split(',');
+  for (var j = 0; j < tabHeaders.length; j++) tabHeaders[j] = tabHeaders[j].replace(/^"+|"+$/g, '');
+  tabHeaders = tabPad.concat(tabHeaders.slice(1));
+  remplirForm(tabHeaders);
 
   //détection du format du fichier wireshark
   //la colonne time contient soit le nombre de secondes depuis le début de la capture
@@ -125,9 +140,9 @@ function importerCITHARE(txt)
   var lines = txt.split('\n');
   var data = [];
 
-  var tabCriteres = lines[0].trim().split(';');
-  tabCriteres = tabCriteres.slice(0,2).concat(tabCriteres.slice(4));  
-  remplirForm(tabCriteres);
+  var tabHeaders = lines[0].trim().split(';');
+  tabHeaders = tabHeaders.slice(0,2).concat(tabHeaders.slice(4));  
+  remplirForm(tabHeaders);
 
   for (var i = 1; i < lines.length; i++)
   {
@@ -156,9 +171,8 @@ function importerCSV(txt)
   var data = [];
   var lines = txt.split('\n');
 
-  var tabCriteres = lines[0].trim().split(';');
-  remplirForm(tabCriteres);
-
+  var tabHeaders = lines[0].trim().split(';');
+  remplirForm(tabHeaders);
 
   //saute la première ligne
   for (var i = 1; i < lines.length; i++)
