@@ -7,10 +7,11 @@ function buildTabValeurs(data, idxColonne)
   return tabValeurs;
 }
 
+
 function buildTabCriteres(ligneEntetes)
 {
   var tabCriteres = [];
-  for (var i = 3; i < ligneEntetes.length; i++)
+  for (var i = offsetColonne; i < ligneEntetes.length; i++)
       tabCriteres.push(ligneEntetes[i]);
   return tabCriteres;
 }
@@ -31,6 +32,7 @@ function DayNumberToDayString(val)
   }
 }
 
+
 Date.prototype.getWeek = function()
 {
   var date = new Date(this.getTime());
@@ -41,12 +43,14 @@ Date.prototype.getWeek = function()
     (week1.getDay() + 6) % 7) / 7);
 }
 
+
 function ConvDateFromExcel(val)
 {
   var tab = val.split(' ');
   var date = tab[0].split('/');
   return date[2] + "-" + date[1] + "-" + date[0] + " " + tab[1]; 
 }
+
 
 function getMinDate(tab)
 {
@@ -59,6 +63,7 @@ function getMinDate(tab)
   return new Date(min);
 }
 
+
 function getMaxDate(tab)
 {
   var max = new Date(0, 0, 1).getTime();
@@ -70,6 +75,7 @@ function getMaxDate(tab)
   return new Date(max);
 }
 
+
 function addSeconds(date, seconds)
 {
   date.setSeconds(date.getSeconds() + seconds);
@@ -77,49 +83,13 @@ function addSeconds(date, seconds)
 }
 
 
-function getTruncatedDate(date)
-{
-  var sdate = '';
-  if (uniteTemps == 'year') sdate += date.getFullYear() + '-01-01 00:00:00';
-  else if (uniteTemps == 'month') sdate += date.getFullYear() + '-' + (date.getMonth()+1) + '-01 00:00:00';
-  else if (uniteTemps == 'week')
-  {
-    date = new Date(date.setDate(date.getDate() - date.getDay()));
-    sdate += date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate() +' 00:00:00';
-  }
-  else if (uniteTemps == 'day') sdate += date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate() +' 00:00:00';
-  else if (uniteTemps == 'hour') sdate += date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate() +' ' + date.getHours() + ':00:00';
-  else if (uniteTemps == 'minute') sdate += date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate() +' ' + date.getHours() + ':'+ date.getMinutes() +':00';
-  else if (uniteTemps == 'second') sdate += date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate() +' ' + date.getHours() + ':'+ date.getMinutes() +':' + date.getSeconds();
-  else sdate = date.getTime();
-
-  return new Date(sdate);
-}
-
-function getDate(val, unitePeriode)
-{
-  var months = (val.getMonth() + 1 < 10) ? '0' + (val.getMonth() + 1) : val.getMonth() + 1;
-  var hours = (val.getHours() < 10) ? '0' + (val.getHours()) : val.getHours();
-  var minutes = (val.getMinutes() < 10) ? '0' + (val.getMinutes()) : val.getMinutes();
-
-  if (unitePeriode == 0) return ''+val.getFullYear();
-  else if (unitePeriode == 1) return ''+val.getFullYear() + '-' + months
-  else if (unitePeriode == 2) return ''+val.getFullYear() + '-' + val.getWeek();
-  else if (unitePeriode == 3) return ''+val.toLocaleDateString();
-  else if (unitePeriode == 4) return ''+val.toLocaleDateString() + " " + hours;
-  else if (unitePeriode == 5) return ''+val.toLocaleDateString() + " " + hours + ":" + minutes;
-  else if (unitePeriode == 6) return ''+val.toLocaleString();
-  else if (unitePeriode == 7) return ''+val.toISOString();
-}
-
 function getYMD(date)
 {
   return date.toISOString().replace('T', ' ').substring(0,19);
 }
 
 
-
-function GetStringDate(date, type, fillDefault)
+function GetStringDate(date, type = 'second', fillDefault = false)
 {
   //var template = '%year%-%month%-%day% %hour%:%minute%:%second%.%millisecond%';
   //var template_week = '%year%-%week%';
@@ -150,4 +120,19 @@ function GetStringDate(date, type, fillDefault)
   else if (fillDefault) sdate += template_defaut.substring(idx);
 
   return sdate;
+}
+
+
+function GetEcartTemps(uniteTemps)
+{
+  var ecartTemps = 0;
+  if (uniteTemps == 'year') ecartTemps = 31536000000;
+  else if (uniteTemps == 'month') ecartTemps = 2592000000;
+  else if (uniteTemps == 'week') ecartTemps = 604800000;
+  else if (uniteTemps == 'day') ecartTemps = 86400000;
+  else if (uniteTemps == 'hour') ecartTemps = 3600000;
+  else if (uniteTemps == 'minute') ecartTemps = 60000;
+  else if (uniteTemps == 'second') ecartTemps = 1000;
+  else if (uniteTemps == 'millisecond') ecartTemps = 0;
+  return ecartTemps;
 }

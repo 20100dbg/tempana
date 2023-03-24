@@ -1,6 +1,6 @@
 function importerFichier(file)
 {
-  resetCriteres();
+  supprimerFiltre();
   var fileReader = new FileReader();
 
   fileReader.onload = function (e)
@@ -15,9 +15,10 @@ function importerFichier(file)
     else if (ext == ".csv") importedData = importerCSV(fileReader.result);
     else
     {
-      alert("Format inconnu");
       importedData = [];
+      workingData = [];
     }
+
     if (importedData.length == 0)
     {
       divFilename.classList.add("error");

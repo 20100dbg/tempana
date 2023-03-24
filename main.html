@@ -90,7 +90,9 @@
     <div class="col cadre">
       Filtre géographique<br>
       <div id="map"></div>
-
+      <label for="outsidePoints"><input type="checkbox" id="outsidePoints"> Garder les points en dehors des formes tracées</label>
+      <br>
+      <br>
       Sélection de la période<br>
       <div class="sliders_control">
         <input id="fromSlider" type="range" value="0" min="0" max="100"/>
@@ -107,7 +109,6 @@
     <div class="col">
       <button class="btn btn-primary" type="button" onclick="creerFiltreEtGraphiques();">Créer les graphiques</button>
       <span id="stats"></span>
-      <textarea id="dump"></textarea>
     </div>
 </div>
 </div>

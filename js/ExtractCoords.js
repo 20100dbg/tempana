@@ -13,39 +13,36 @@ function DessinerPoints(tabPoints)
 function FiltreCoord(tabPoints)
 {
     var tabPolygons = map.pm.getGeomanDrawLayers();
+    if (tabPolygons.length == 0) return tabPoints;
+
+    var insidePoints = document.getElementById('outsidePoints').checked;
     var tabFiltre = [];
 
     for (var i = 0; i < tabPoints.length; i++)
     {
-        var flagAdded = false;
+        var isInside = false;
         var pointObj = getPointObj(tabPoints[i]);
 
-        for (var j = 0; j < tabPolygons.length && !flagAdded; j++)
+        for (var j = 0; j < tabPolygons.length && !isInside; j++)
         {
             if ("_mRadius" in tabPolygons[j])
             {
                 if (IsInsideCircle(pointObj, tabPolygons[j]._latlng, tabPolygons[j]._mRadius))
-                {
-                    tabFiltre.push(tabPoints[i]);
-                    flagAdded = true;
-                }
+                    isInside = true;
             }
             else
             {
                 if (IsInsidePolygon(pointObj, tabPolygons[j]._latlngs[0]))
-                {
-                    tabFiltre.push(tabPoints[i]);
-                    flagAdded = true;
-                }
+                    isInside = true;
             }
         }
+        if (insidePoints && isInside) tabFiltre.push(tabPoints[i]);
+        else if (!insidePoints && !isInside) tabFiltre.push(tabPoints[i]);
     }
-
-    if (tabPolygons.length == 0)
-        tabFiltre = tabPoints;
 
     return tabFiltre;
 }
+
 
 function IsInsidePolygon(posPoint, polyPoints)
 {

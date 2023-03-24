@@ -5,7 +5,7 @@ function buildEvolutionGlobale(tab)
 
   for (var i = 0; i < tab.length; i++)
   {
-    var tmpDate = getTruncatedDate(tab[i][IDX_DATE]);
+    var tmpDate = new Date(GetStringDate(tab[i][IDX_DATE], uniteTemps));
     tmpDate = tmpDate.getTime();
 
     if (!(tmpDate in tmpdata)) tmpdata[tmpDate] = 0;
@@ -30,7 +30,7 @@ function buildEvolutionGlobaleCumulative(tab)
 
   for (var i = 0; i < tab.length; i++)
   {
-    var tmpDate = getTruncatedDate(tab[i][IDX_DATE]);
+    var tmpDate = new Date(GetStringDate(tab[i][IDX_DATE], uniteTemps));
     tmpDate = tmpDate.getTime();
     
     if (i == 0) lastDate = tmpDate;
@@ -54,7 +54,7 @@ function buildEvolutionCateg(tab, colonneSerie, unitePeriode)
 
   for (var i = 0; i < tab.length; i++)
   {
-    var tmpDate = getDate(tab[i][IDX_DATE], unitePeriode);
+    var tmpDate = GetStringDate(tab[i][IDX_DATE], unitePeriode, true);
     
     var flag = false;
     for (var j = 0; j < data.length && !flag; j++) {
@@ -111,18 +111,11 @@ function buildEvolutionGlobaleCateg(tab, colonneSerie)
   var data = {};
   tabSerie = buildTabValeurs(tab, colonneSerie);
 
-  var startDate = getTruncatedDate(tab[0][IDX_DATE]).getTime();
-  var endDate = getTruncatedDate(tab[tab.length - 1][IDX_DATE]).getTime();
+  var startDate = new Date(GetStringDate(tab[0][IDX_DATE], uniteTemps, true)).getTime();
+  var endDate = new Date(GetStringDate(tab[tab.length - 1][IDX_DATE], uniteTemps, true)).getTime();
 
-  var ecartTemps = 0;
-  if (uniteTemps == 'year') ecartTemps = 31536000000;
-  else if (uniteTemps == 'month') ecartTemps = 2592000000;
-  else if (uniteTemps == 'week') ecartTemps = 604800000;
-  else if (uniteTemps == 'day') ecartTemps = 86400000;
-  else if (uniteTemps == 'hour') ecartTemps = 3600000;
-  else if (uniteTemps == 'minute') ecartTemps = 60000;
-  else if (uniteTemps == 'second') ecartTemps = 1000;
-  else if (uniteTemps == 'millisecond') ecartTemps = 0;
+  var ecartTemps = GetEcartTemps(uniteTemps);
+
 
   for (var i = 0; i < tabSerie.length; i++)
   {
@@ -139,7 +132,7 @@ function buildEvolutionGlobaleCateg(tab, colonneSerie)
 
   for (var i = 0; i < tab.length; i++)
   {
-    var tmpDate = getTruncatedDate(tab[i][IDX_DATE]).getTime();
+    var tmpDate = new Date(GetStringDate(tab[i][IDX_DATE], uniteTemps, true)).getTime();
     var maSerie = tab[i][colonneSerie];
 
     var found = false;
@@ -335,7 +328,8 @@ function buildGanttCateg(tab, idxColonneCateg)
     var categ = tab[i][idxColonneCateg];
 
     var dateDebut = getYMD(tab[i][IDX_DATE]);
-    var dateFin = getYMD(addSeconds(tab[i][IDX_DATE], diff));
+    var dateFin = new Date(tab[i][IDX_DATE]);
+    dateFin = getYMD(addSeconds(dateFin, diff));
 
     data.push({
       category:categ, 

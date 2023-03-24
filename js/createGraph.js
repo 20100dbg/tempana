@@ -114,7 +114,7 @@ function GraphEvolutionPeriodeCateg(data)
   var root = am5.Root.new(container);
   root.setThemes([ am5themes_Kelly.new(root) ]);
 
-  data = buildEvolutionCateg(data, idxColonneCateg, idxUnitePeriode);
+  data = buildEvolutionCateg(data, idxColonneCateg, unitePeriode);
 
   var chart = root.container.children.push(am5xy.XYChart.new(root, {
     panX: false,

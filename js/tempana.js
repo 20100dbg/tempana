@@ -1,15 +1,15 @@
 var map;
 var layersPoints = [];
 var importedData = [], workingData = [];
-//var tabUniteTemps = ["year", "month", "week", "day", "hour", "minute", "second", "millisecond"];
+var tabUniteTemps = ["year", "month", "week", "day", "hour", "minute", "second", "millisecond"];
 
 var uniteTemps = "day";
 var nbUniteTemps = 1;
+var unitePeriode = 'month';
 
 var idxColonneCateg = -1;
 var idxColonneContient = -1;
 var tabColonneEltec = [];
-var idxUnitePeriode = 1;
 
 var startDateGlobal = 0;
 var endDateGlobal = 0;
@@ -25,6 +25,8 @@ var offsetColonne = 3;
 //ok
 //initialise la carte utilisée pour prévisualiser et filtrer les évènements
 window.onload = function() {
+
+    remplirSelectUniteTemps();
 
     //'carto/{z}/{x}/{y}.png'
     //'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
@@ -61,7 +63,7 @@ function creerSelectColonne()
 {
   idxColonneCateg = document.getElementById('selectCateg').value;
   idxColonneContient = document.getElementById('selectContient').value;
-  idxUnitePeriode = document.getElementById('selectUnitePeriode').value;
+  unitePeriode = document.getElementById('selectUnitePeriode').value;
   uniteTemps = document.getElementById('selectUniteTemps').value;
   nbUniteTemps = document.getElementById('nbUniteTemps').value;
 }
@@ -116,10 +118,9 @@ function appliquerFiltres()
   workingData = FiltrePeriode(workingData);
   workingData = FiltreCoord(workingData);
   workingData = FiltreContient(workingData);
-  //dumpcsv(workingData);
-
   workingData = FiltreDoublon(workingData);
 }
+
 
 function FiltreContient(data)
 {
@@ -140,6 +141,7 @@ function FiltreContient(data)
 
   return filteredData;
 }
+
 
 function FiltreDoublon(data)
 {
@@ -166,6 +168,7 @@ function FiltreDoublon(data)
   return filteredData;
 }
 
+
 function FiltrePeriode(data)
 {
   var filteredData = [];
@@ -179,16 +182,6 @@ function FiltrePeriode(data)
   return filteredData;
 }
 
-function dumpcsv(data)
-{
-  var obj = document.getElementById('dump');
-  obj.value = '';
-
-  for (var i = 0; i < data.length; i++)
-  {
-    obj.value += data[i][IDX_DATE].toISOString() + '\n';
-  }  
-}
 
 function FiltreColonnes(data)
 {
@@ -215,20 +208,6 @@ function FiltreColonnes(data)
 
 
 
-function resetCriteres()
-{
-  idxColonneCateg = -1;
-  tabColonneEltec = [];
-
-  fromSlider.value = 0;
-  toSlider.value = 100;
-  
-  afficherStats();
-}
-
-//fusionner supprimerFiltre et resetcritere
-//a l'import on doit appeler supprimerFiltre
-
 //reinitialise les filtres et autres éléments du form
 function supprimerFiltre()
 {
@@ -237,14 +216,37 @@ function supprimerFiltre()
   for (var i = divFiltres.childNodes.length - 1; i >= 0; i--)
     divFiltres.childNodes[i].remove();
 
+  document.getElementById('selectCateg').innerHTML = '';
+  document.getElementById('selectEltec').innerHTML = '';
+  document.getElementById('selectContient').innerHTML = '';
+  document.getElementById('texteContient').value = '';
+
+  idxColonneCateg = -1;
+  tabColonneEltec = [];
+
+  uniteTemps = "day";
+  nbUniteTemps = 1;
+  unitePeriode = 'month';
+
+  idxColonneCateg = -1;
+  idxColonneContient = -1;
+  tabColonneEltec = [];
+
+  startDateGlobal = 0;
+  endDateGlobal = 0;
+  startDatePeriode = 0;
+  endDatePeriode = 0;
+
   fromSlider.value = 0;
   toSlider.value = 100;
-
-  //document.getElementById('fromSlider').value = 0;
-  //document.getElementById('toSlider').value = 100;
+  viderBandeau();
 
   workingData = [...importedData];
+
+  AfficherPeriode();
+  afficherStats();
 }
+
 
 function creerTabFiltres()
 {
@@ -264,8 +266,6 @@ function creerTabFiltres()
 }
 
 
-
-
 function AfficherPeriode()
 {
   document.getElementById('infoSlider').innerHTML = 
@@ -273,11 +273,13 @@ function AfficherPeriode()
   'Periode : ' + startDatePeriode.toLocaleString() + ' - ' +  endDatePeriode.toLocaleString();
 }
 
+
 function afficherStats()
 {
   document.getElementById('stats').innerHTML = 
   'nbLignesImportees : ' + importedData.length + ' - nbLignesAffichees : ' + workingData.length;
 }
+
 
 function updatePeriode(fromSlider, toSlider)
 {
@@ -288,6 +290,7 @@ function updatePeriode(fromSlider, toSlider)
 
   AfficherPeriode();
 }
+
 
 function ExtrairePeriode(from, to)
 {

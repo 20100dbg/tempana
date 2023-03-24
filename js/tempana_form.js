@@ -49,7 +49,24 @@ function remplirForm(tabCriteres)
   remplirSelectFiltreColonne(tabCriteres);
   remplirSelectEltec(tabCriteres);
   remplirSelectContient(tabCriteres);
+
 }
+
+function remplirSelectUniteTemps()
+{
+  var div1 = document.getElementById('selectUnitePeriode');
+  var div2 = document.getElementById('selectUniteTemps');
+
+  div1.innerHTML = ''; //<option value="-1">Période</option>';
+  div2.innerHTML = ''; //<option value="-1">Unité temps</option>';
+
+  for (var i = 0; i < tabUniteTemps.length; i++)
+  {
+    div1.innerHTML += '<option value="'+ tabUniteTemps[i] +'" '+ ((tabUniteTemps[i] == 'month') ? 'selected':'') +'>' + tabUniteTemps[i] + '</options>';
+    div2.innerHTML += '<option value="'+ tabUniteTemps[i] +'" '+ ((tabUniteTemps[i] == 'day') ? 'selected':'') +'>' + tabUniteTemps[i] + '</options>';
+  }
+}
+
 
 function remplirSelectCategorie(tabCriteres)
 {
