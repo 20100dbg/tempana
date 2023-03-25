@@ -1,3 +1,5 @@
+var splitcsv = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/
+
 function importerFichier(file)
 {
   resetForm();
@@ -53,6 +55,7 @@ function importerFichier(file)
 function AffichierPrevisualisation(importedData)
 {
   var obj = document.getElementById('previsualisation');
+  //.table-responsive-sm
   var str = '<table class="table table-sm"><thead><tr>';
 
   for (var i = 0; i < tabHeaders.length; i++)
@@ -67,7 +70,7 @@ function AffichierPrevisualisation(importedData)
     var tabtmp = importedData[i].slice(offsetColonne);
 
     for (var j = 0; j < tabtmp.length; j++)
-      str += '<td>'+ tabtmp[j] +'</td>';
+      str += '<td>'+ tabtmp[j].substring(0,15) +'</td>';
 
     str += '</tr>';
   }
@@ -148,7 +151,7 @@ function importerCITHARE(txt)
   {
     if (lines[i] == "") continue;
 
-    var tab = lines[i].trim().split(';');
+    var tab = lines[i].trim().split(splitcsv);
     tab = tab.slice(0,2).concat(tab.slice(4));
 
     for (var j = 0; j < tab.length; j++) tab[j] = tab[j].replace(/^"+|"+$/g, '');
