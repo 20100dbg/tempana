@@ -1,5 +1,0 @@
-"No.","Time","Source","Destination","Protocol","Length","Info"
-"1","0.000000","192.168.24.1","212.27.63.114","HTTP","425","GET / HTTP/1.1 "
-"2","0.062551","212.27.63.114","192.168.24.1","HTTP","1006","Continuation"
-"3","11.458425","192.168.24.1","212.27.63.114","HTTP","467","GET /login?mail=guyfawkes@world.net&pwd=n0th1ng HTTP/1.1 "
-"4","277.871973","192.168.24.1","212.27.63.114","HTTP","664","POST /?login HTTP/1.1 "

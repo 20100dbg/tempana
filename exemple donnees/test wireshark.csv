@@ -1,8 +1,0 @@
-"No.","Time","Source","Destination","Protocol","Length","Info"
-"1","2023-03-21 23:00:33,016671","aa:95:bf:79:9c:d3","Broadcast","802.11","275","Beacon frame, SN=2360, FN=0, Flags=........, BI=100, SSID=""Zflip3 de junior"""
-"2","2023-03-21 23:00:33,071452","Raspberr_34:36:32","Broadcast","802.11","210","Probe Request, SN=34, FN=0, Flags=........, SSID=Wildcard (Broadcast)"
-"3","2023-03-21 23:00:33,079774","Raspberr_34:36:32","Broadcast","802.11","210","Probe Request, SN=35, FN=0, Flags=........, SSID=Wildcard (Broadcast)"
-"4","2023-03-21 23:00:33,122934","Raspberr_34:36:32","Broadcast","802.11","210","Probe Request, SN=37, FN=0, Flags=........, SSID=Wildcard (Broadcast)"
-"5","2023-03-21 23:00:33,145914","Raspberr_34:36:32","Broadcast","802.11","210","Probe Request, SN=38, FN=0, Flags=........, SSID=Wildcard (Broadcast)"
-"6","2023-03-21 23:00:33,166700","Raspberr_34:36:32","Broadcast","802.11","210","Probe Request, SN=39, FN=0, Flags=........, SSID=Wildcard (Broadcast)"
-"7","2023-03-21 23:00:33,190056","Raspberr_34:36:32","Broadcast","802.11","210","Probe Request, SN=40, FN=0, Flags=........, SSID=Wildcard (Broadcast)"
