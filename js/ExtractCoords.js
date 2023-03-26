@@ -1,3 +1,13 @@
+var distanceNWSE = 0;
+
+
+function dessiner(data)
+{
+  var tmp = GetHeatDataObject(data);
+  heatmapLayer.setData(tmp);
+  DessinerPoints(data);
+}
+
 function DessinerPoints(tabPoints)
 {
     for (var i = 0; i < layersPoints.length; i++) layersPoints[i].remove();
@@ -6,7 +16,9 @@ function DessinerPoints(tabPoints)
     for (var i = 0; i < tabPoints.length; i++)
     {
         var pointObj = getPointObj(tabPoints[i]);
-        layersPoints.push(L.circle([pointObj.lat, pointObj.lng], {radius: 100, fill: true}).addTo(map));
+        layersPoints.push(L.circleMarker([pointObj.lat, pointObj.lng], {radius: 3, stroke:true, color: '#000000', weight:1,
+                        fill: true, fillOpacity: 1}).addTo(map));
+        //fillColor: color
     }
 }
 
@@ -15,7 +27,7 @@ function FiltreCoord(tabPoints)
     var tabPolygons = map.pm.getGeomanDrawLayers();
     if (tabPolygons.length == 0) return tabPoints;
 
-    var insidePoints = document.getElementById('outsidePoints').checked;
+    var garderEnDehors = document.getElementById('outsidePoints').checked;
     var tabFiltre = [];
 
     for (var i = 0; i < tabPoints.length; i++)
@@ -23,7 +35,7 @@ function FiltreCoord(tabPoints)
         var isInside = false;
         var pointObj = getPointObj(tabPoints[i]);
 
-        for (var j = 0; j < tabPolygons.length && !isInside; j++)
+        for (var j = 0; j < tabPolygons.length; j++)
         {
             if ("_mRadius" in tabPolygons[j])
             {
@@ -36,8 +48,8 @@ function FiltreCoord(tabPoints)
                     isInside = true;
             }
         }
-        if (insidePoints && isInside) tabFiltre.push(tabPoints[i]);
-        else if (!insidePoints && !isInside) tabFiltre.push(tabPoints[i]);
+        if (isInside && !garderEnDehors) tabFiltre.push(tabPoints[i]);
+        else if (!isInside && garderEnDehors) tabFiltre.push(tabPoints[i]);
     }
 
     return tabFiltre;
@@ -74,6 +86,21 @@ function getPointObj(tabLine)
     return {lat: tabLine[IDX_LAT], lng: tabLine[IDX_LNG]};
 }
 
+function GetHeatDataObject(tab)
+{
+  var max = 0;
+  var data = [];
+
+  for (var i = 0; i < tab.length; i++)
+  {
+    var c = (IDX_COUNT > -1) ? tab[i][IDX_COUNT] : 1;
+    if (max < c) max = c;
+    data.push(getPointObj(tab[i]));
+  }
+
+  return { max: max + 1, data: data };
+}
+
 function findBounds(tabPoints)
 {
     var pointObj = getPointObj(tabPoints[0]);
@@ -95,6 +122,35 @@ function findBounds(tabPoints)
 
 function centrerVue(tabPoints)
 {
-    map.flyToBounds(findBounds(tabPoints), {animate:false});
-    map.zoomOut();
+    var bounds = findBounds(tabPoints);
+
+    var pointNW = new  L.LatLng(bounds[0][0], bounds[0][1]); 
+    var pointSE = new  L.LatLng(bounds[1][0], bounds[1][1]); 
+    distanceNWSE = pointNW.distanceTo(pointSE);
+
+    map.flyToBounds(bounds, {animate:false});
+}
+
+
+function initHeatmap()
+{
+  var radius = 1;
+  var tmp = distanceNWSE / 10000;
+  //console.log('dist : ' + tmp);
+
+  radius = radius * tmp / 1400;
+  //console.log('radius : ' + radius);
+
+  majRadiusHeatmap(radius);
+}
+
+function majRadiusHeatmap(radius)
+{
+  map.removeLayer(heatmapLayer);
+  var facteurRadius = 4;
+  radius = facteurRadius * radius;
+  //console.log('radius : ' + radius);
+
+  heatmapcfg.radius = radius;
+  map.addLayer(heatmapLayer);
 }

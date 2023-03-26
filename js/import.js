@@ -43,16 +43,19 @@ function importerFichierTexte(filename, filetext)
   startDateGlobal = importedData[0][IDX_DATE];
   endDateGlobal = importedData[importedData.length - 1][IDX_DATE];
 
-  updatePeriode(fromSlider, toSlider);
-  AfficherPeriode();
-
-  DessinerPoints(importedData);
-  centrerVue(importedData);
-
-  AffichierPrevisualisation(importedData);
-  buildBandeau(importedData);
-
   workingData = [...importedData];
+
+  resetSlider();
+  AffichierPrevisualisation(workingData);
+  creerBandeau(workingData);
+
+  majPeriode();
+
+  centrerVue(workingData);
+  initHeatmap();
+  dessiner(workingData);
+
+
   afficherStats();
 }
 
@@ -162,8 +165,8 @@ function importerCITHARE(txt)
 
     tab[IDX_DATE] = convertirDate(tab[IDX_DATE]);
     var x = tab[IDX_LAT];
-    tab[IDX_LAT] = tab[IDX_LNG];
-    tab[IDX_LNG] = x;
+    tab[IDX_LAT] = parseFloat(tab[IDX_LNG]);
+    tab[IDX_LNG] = parseFloat(x);
     data.push(tab);
   }
 
@@ -195,6 +198,10 @@ function importerCSV(txt)
     if (date != null)
     {
       tab[IDX_DATE] = date;
+
+      tab[IDX_LAT] = parseFloat(tab[IDX_LAT]);
+      tab[IDX_LNG] = parseFloat(tab[IDX_LNG]);
+
       //if (dateFin == null) dateFin = date;
       //tab[IDX_DATE_FIN] = dateFin;
 
@@ -238,3 +245,4 @@ function nettoyerLigne(tab)
 
   return tab;
 }
+

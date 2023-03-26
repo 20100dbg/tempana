@@ -26,18 +26,18 @@ var offsetColonne = 3;
 
 //ok
 //initialise la carte utilisée pour prévisualiser et filtrer les évènements
+var heatmapcfg = {
+  "radius": 0.6,
+  "maxOpacity": .8,
+  "scaleRadius": true,
+  "useLocalExtrema": false,
+  latField: 'lat', lngField: 'lng', valueField: 'count'
+};
+
 window.onload = function() {
 
     remplirSelectUniteTemps();
     letzgo();
-
-    var heatmapcfg = {
-      "radius": 0.6,
-      "maxOpacity": .8,
-      "scaleRadius": true,
-      "useLocalExtrema": false,
-      latField: 'lat', lngField: 'lng', valueField: 'count'
-    };
 
     //'carto/{z}/{x}/{y}.png'
     //'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
@@ -70,7 +70,7 @@ function creerFiltreEtGraphiques()
   creerGraphiques();
   afficherStats();
   
-  DrawHeatmap(workingData);
+  dessiner(workingData);
 }
 
 function creerSelectColonne()
@@ -181,7 +181,7 @@ function afficherStats()
 }
 
 
-function updatePeriode(fromSlider, toSlider)
+function majPeriode()
 {
   const [from, to] = getParsed(fromSlider, toSlider);
   const [startPeriode, endPeriode] = ExtrairePeriode(from, to);
@@ -202,7 +202,7 @@ function ExtrairePeriode(from, to)
 }
 
 
-function buildBandeau(data)
+function creerBandeau(data)
 {
   viderBandeau();
   var diff = endDateGlobal - startDateGlobal;
@@ -227,22 +227,9 @@ function drawLine(x)
 }
 
 
-function GetHeatDataObject(tab)
+
+function resetSlider()
 {
-  var max = 0;
-  var data = [];
-
-  for (var i = 0; i < tab.length; i++)
-  {
-    var c = (IDX_COUNT > -1) ? tab[i][IDX_COUNT] : 1;
-    if (max < c) max = c;
-    data.push(getPointObj(tab[i]));
-  }
-
-  return { max: max + 1, data: data };
-}
-
-function DrawHeatmap(data)
-{
-  heatmapLayer.setData(GetHeatDataObject(data));
+  fromSlider.value = 0;
+  toSlider.value = 100;
 }

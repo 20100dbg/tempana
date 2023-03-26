@@ -97,6 +97,7 @@ function GraphEvolutionGlobaleCumulative(data)
     valueXField: "date",
     tooltip: am5.Tooltip.new(root, { labelText: "{valueX}: {valueY}" })
   }));
+  series.strokes.template.setAll({ strokeWidth: 3 });
 
   data = buildEvolutionGlobaleCumulative(data);
 
@@ -243,6 +244,7 @@ function GraphEvolutionGlobaleCateg(data)
         pointerOrientation: "horizontal"
       })
     }));
+    series.strokes.template.setAll({ strokeWidth: 3 });
     
     series.data.setAll(data[serie]);
     series.appear();
@@ -358,6 +360,7 @@ function GraphEvolutionGlobaleCumulativeCateg(data)
         pointerOrientation: "horizontal"
       })
     }));
+    series.strokes.template.setAll({ strokeWidth: 3 });
     
     series.data.setAll(data[serie]);
     series.appear();
