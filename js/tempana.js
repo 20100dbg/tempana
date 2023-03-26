@@ -29,7 +29,7 @@ var offsetColonne = 3;
 window.onload = function() {
 
     remplirSelectUniteTemps();
-    //map.addLayer(heatmapLayer);
+    letzgo();
 
     var heatmapcfg = {
       "radius": 0.6,
@@ -69,11 +69,8 @@ function creerFiltreEtGraphiques()
   creerNomsColonnes();
   creerGraphiques();
   afficherStats();
-
   
-  DrawHeatmap(importedData);
-  //DessinerPoints(importedData);
-
+  DrawHeatmap(workingData);
 }
 
 function creerSelectColonne()

@@ -94,6 +94,7 @@ function GetStringDate(date, type = 'second', fillDefault = false)
   //var template = '%year%-%month%-%day% %hour%:%minute%:%second%.%millisecond%';
   //var template_week = '%year%-%week%';
   var template_defaut = '0001-01-01 00:00:00.0';
+  var template_middle = '0001-06-15 12:30:30.5';
   var sdate = date.toISOString().replace('T', ' ');
 
   var year = date.getFullYear();

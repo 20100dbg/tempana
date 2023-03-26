@@ -1,4 +1,4 @@
-var splitcsv = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/
+var splitcsv = /;(?=(?:(?:[^"]*"){2})*[^"]*$)/
 
 function importerFichier(file)
 {
@@ -8,48 +8,52 @@ function importerFichier(file)
 
   fileReader.onload = function (e)
   {
-    var filename = file.name;
-    var ext = filename.substring(filename.lastIndexOf('.'));
-    var divFilename = document.getElementById('nomFichierImport');
-    divFilename.innerHTML = filename;
-
-    if (filename.indexOf('CITHARE') > -1) importedData = importerCITHARE(fileReader.result);
-    else if (filename.indexOf('wireshark') > -1) importedData = importerWIRESHARK(fileReader.result);
-    else if (ext == ".csv") importedData = importerCSV(fileReader.result);
-    else
-    {
-      importedData = [];
-      workingData = [];
-    }
-
-    if (importedData.length == 0)
-    {
-      divFilename.classList.add("error");
-      divFilename.innerHTML = "format non reconnu ! Faut-il spécifier 'cithare' ou 'wireshark' dans le nom de fichier ?";
-      return;
-    }
-    else
-      divFilename.classList.remove("error");
-
-
-    importedData.sort(function(a,b) { return a[IDX_DATE] > b[IDX_DATE] });
-    startDateGlobal = importedData[0][IDX_DATE];
-    endDateGlobal = importedData[importedData.length - 1][IDX_DATE];
-
-    updatePeriode(fromSlider, toSlider);
-    AfficherPeriode();
-
-    DessinerPoints(importedData);
-    centrerVue(importedData);
-
-    AffichierPrevisualisation(importedData);
-    buildBandeau(importedData);
-
-    workingData = [...importedData];
-    afficherStats();
+    importerFichierTexte(file.name, fileReader.result)
   }
 
   fileReader.readAsText(file);
+}
+
+function importerFichierTexte(filename, filetext)
+{
+  var ext = filename.substring(filename.lastIndexOf('.'));
+  var divFilename = document.getElementById('nomFichierImport');
+  divFilename.innerHTML = filename;
+
+  if (filename.indexOf('CITHARE') > -1) importedData = importerCITHARE(filetext);
+  else if (filename.indexOf('wireshark') > -1) importedData = importerWIRESHARK(filetext);
+  else if (ext == ".csv") importedData = importerCSV(filetext);
+  else
+  {
+    importedData = [];
+    workingData = [];
+  }
+
+  if (importedData.length == 0)
+  {
+    divFilename.classList.add("error");
+    divFilename.innerHTML = "format non reconnu ! Faut-il spécifier 'cithare' ou 'wireshark' dans le nom de fichier ?";
+    return;
+  }
+  else
+    divFilename.classList.remove("error");
+
+
+  importedData.sort(function(a,b) { return a[IDX_DATE] > b[IDX_DATE] });
+  startDateGlobal = importedData[0][IDX_DATE];
+  endDateGlobal = importedData[importedData.length - 1][IDX_DATE];
+
+  updatePeriode(fromSlider, toSlider);
+  AfficherPeriode();
+
+  DessinerPoints(importedData);
+  centrerVue(importedData);
+
+  AffichierPrevisualisation(importedData);
+  buildBandeau(importedData);
+
+  workingData = [...importedData];
+  afficherStats();
 }
 
 function AffichierPrevisualisation(importedData)
