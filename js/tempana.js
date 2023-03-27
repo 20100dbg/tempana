@@ -37,7 +37,7 @@ var heatmapcfg = {
 window.onload = function() {
 
     remplirSelectUniteTemps();
-    letzgo();
+    //letzgo();
 
     //'carto/{z}/{x}/{y}.png'
     //'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'

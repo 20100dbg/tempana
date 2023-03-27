@@ -137,3 +137,19 @@ function GetEcartTemps(uniteTemps)
   else if (uniteTemps == 'millisecond') ecartTemps = 0;
   return ecartTemps;
 }
+
+function AjouterUniteTemps(date, uniteTemps)
+{
+  var nbUniteTemps = 1;
+
+  if (uniteTemps == 'year') date.setYear(date.getYear() + nbUniteTemps);
+  else if (uniteTemps == 'month') date.setMonth(date.getMonth() + nbUniteTemps);
+  else if (uniteTemps == 'week') date.setDate(date.getDate() + (7 * nbUniteTemps));
+  else if (uniteTemps == 'day') date.setDate(date.getDate() + nbUniteTemps)
+  else if (uniteTemps == 'hour') date.setHours(date.getHours() + nbUniteTemps);
+  else if (uniteTemps == 'minute') date.setMinutes(date.getMinutes() + nbUniteTemps);
+  else if (uniteTemps == 'second') date.setSeconds(date.getSeconds() + nbUniteTemps);
+  else if (uniteTemps == 'millisecond') date.setMilliseconds(date.getMilliseconds() + nbUniteTemps);
+
+  return date;
+}

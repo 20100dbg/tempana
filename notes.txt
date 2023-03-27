@@ -44,10 +44,11 @@ stats générales
 
 _____
 
-"millisecond", "second", "minute", "hour", "day", "week", "month", and "year".
-
 sélection de la colonne contenant le "count" pour le poids (heatmap et prob d'autres)
 
 colonnes gdh debut - gdh fin
 
 
+graph par période : ajouter des lignes
+
+graph Evolution globale pour Type Evènemnt : HS 

@@ -150,7 +150,8 @@ function GraphEvolutionPeriodeCateg(data)
     renderer: am5xy.AxisRendererY.new(root, {})
   }));
 
-  function makeSeries(name, fieldName) {
+  function makeSeries(name, fieldName)
+  {
     var series = chart.series.push(am5xy.ColumnSeries.new(root, {
       name: name,
       xAxis: xAxis,
@@ -159,29 +160,29 @@ function GraphEvolutionPeriodeCateg(data)
       categoryXField: "date"
     }));
 
-  series.columns.template.setAll({
-    tooltipText: "{name}, {categoryX} : {valueY}",
-    width: am5.percent(90),
-    tooltipY: 0
-  });
-
-  series.data.setAll(data);
-  series.appear();
-
-  series.bullets.push(function () {
-    return am5.Bullet.new(root, {
-      locationY: 0,
-      sprite: am5.Label.new(root, {
-        text: "{valueY}",
-        fill: root.interfaceColors.get("alternativeText"),
-        centerY: 0,
-        centerX: am5.p50,
-        populateText: true
-      })
+    series.columns.template.setAll({
+      tooltipText: "{name}, {categoryX} : {valueY}",
+      width: am5.percent(90),
+      tooltipY: 0
     });
-  });
 
-  legend.data.push(series);
+    series.data.setAll(data);
+    series.appear();
+
+    series.bullets.push(function () {
+      return am5.Bullet.new(root, {
+        locationY: 0,
+        sprite: am5.Label.new(root, {
+          text: "{valueY}",
+          fill: root.interfaceColors.get("alternativeText"),
+          centerY: 0,
+          centerX: am5.p50,
+          populateText: true
+        })
+      });
+    });
+
+    legend.data.push(series);
   }
 
   for (var i = 0; i < tabSerie.length; i++)

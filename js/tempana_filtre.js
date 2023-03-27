@@ -51,9 +51,9 @@ function FiltreDoublon(data)
     var str = '';
 
     for (var j = 0; j < tabColonneEltec.length; j++)
-      str += data[i][tabColonneEltec[j]];
+      str += data[i][tabColonneEltec[j]] + '|';
 
-    if (!tabEltec.includes(str)) 
+    if (!tabEltec.includes(str))
     {
       tabEltec.push(str);
       filteredData.push(data[i]);

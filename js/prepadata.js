@@ -105,11 +105,13 @@ function buildEvolutionGlobaleCumulativeCateg(tab, colonneSerie)
   return data;
 }
 
-
+/*
 function buildEvolutionGlobaleCateg(tab, colonneSerie)
 {
+  if (tab.length == 0) return;
   var data = {};
   tabSerie = buildTabValeurs(tab, colonneSerie);
+
 
   var startDate = new Date(GetStringDate(tab[0][IDX_DATE], uniteTemps, true)).getTime();
   var endDate = new Date(GetStringDate(tab[tab.length - 1][IDX_DATE], uniteTemps, true)).getTime();
@@ -143,6 +145,63 @@ function buildEvolutionGlobaleCateg(tab, colonneSerie)
         data[maSerie][j].value += 1;
         found = true;
       }
+    }
+  }
+
+  return data;
+}
+*/
+
+
+function buildEvolutionGlobaleCateg(tab, colonneSerie)
+{
+  //{'cache': [{date: 1546297200000, value: 1}, {date: 1546297200000, value: 3}]}
+
+  if (tab.length == 0) return;
+  var tmpdata = {};
+  var data = {};
+
+  tabSerie = buildTabValeurs(tab, colonneSerie);
+
+  var tmp = GetStringDate(tab[0][IDX_DATE], uniteTemps, true);
+  var startDate = new Date(tmp);
+
+  tmp = GetStringDate(tab[tab.length - 1][IDX_DATE], uniteTemps, true);
+  var endDate = new Date(tmp);
+
+  //var ecartTemps = GetEcartTemps(uniteTemps);
+
+  //init du tableau à vide
+  for (var i = 0; i < tabSerie.length; i++)
+  {
+    var date = new Date(startDate);
+    var maSerie = tabSerie[i];
+    tmpdata[maSerie] = {};
+
+    while (date <= endDate)
+    {
+      tmpdata[maSerie][date.getTime()] = 0;
+      date = AjouterUniteTemps(date, uniteTemps);
+    }
+  }
+
+  for (var i = 0; i < tab.length; i++)
+  {
+    var tmp = GetStringDate(tab[i][IDX_DATE], uniteTemps, true);
+    var tmpDate = new Date(tmp).getTime();
+    var maSerie = tab[i][colonneSerie];
+
+    tmpdata[maSerie][tmpDate] += 1;
+  }
+
+
+  for (var maSerie in tmpdata)
+  {
+    data[maSerie] = [];
+
+    for (var maDate in tmpdata[maSerie])
+    {
+      data[maSerie].push({date: parseInt(maDate), value: tmpdata[maSerie][maDate]});
     }
   }
 
@@ -227,8 +286,8 @@ function BuildRecurrenceHeureMois(tab)
   for (var i = 0; i < tab.length; i++)
   {
     var date = tab[i][IDX_DATE];    
-    var jour = (date.getDate() < 10) ? '0'+date.getDate():date.getDate();
-    var heure = (date.getHours() < 10) ? '0'+date.getHours():date.getHours() + 'h';
+    var jour = (date.getDate() < 10) ? '0' + date.getDate() : date.getDate();
+    var heure = (date.getHours() < 10) ? '0' + date.getHours() + 'h':date.getHours() + 'h';
 
     if (!(jour in tmpdata)) tmpdata[jour] = {};
     if (!(heure in tmpdata[jour])) tmpdata[jour][heure] = 0;

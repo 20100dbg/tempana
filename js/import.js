@@ -39,7 +39,7 @@ function importerFichierTexte(filename, filetext)
     divFilename.classList.remove("error");
 
 
-  importedData.sort(function(a,b) { return a[IDX_DATE] > b[IDX_DATE] });
+  importedData.sort((a,b) => { return a[IDX_DATE] > b[IDX_DATE] || -(a[IDX_DATE] < b[IDX_DATE]) });
   startDateGlobal = importedData[0][IDX_DATE];
   endDateGlobal = importedData[importedData.length - 1][IDX_DATE];
 
@@ -84,6 +84,7 @@ function AffichierPrevisualisation(importedData)
 
   str += '</tbody></table>';
   obj.innerHTML = str;
+  
 }
 
 
@@ -163,11 +164,17 @@ function importerCITHARE(txt)
 
     for (var j = 0; j < tab.length; j++) tab[j] = tab[j].replace(/^"+|"+$/g, '');
 
-    tab[IDX_DATE] = convertirDate(tab[IDX_DATE]);
-    var x = tab[IDX_LAT];
-    tab[IDX_LAT] = parseFloat(tab[IDX_LNG]);
-    tab[IDX_LNG] = parseFloat(x);
-    data.push(tab);
+    var tmp = convertirDate(tab[IDX_DATE]);
+
+    if (tmp != null)
+    {
+      tab[IDX_DATE] = tmp;
+      var x = tab[IDX_LAT];
+      tab[IDX_LAT] = parseFloat(tab[IDX_LNG]);
+      tab[IDX_LNG] = parseFloat(x);
+      data.push(tab);
+    }
+
   }
 
   return data;
