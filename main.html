@@ -15,8 +15,9 @@
 </head>
 <body>
 
-<center><a href="#" data-toggle="collapse" data-target="#divFiltres">Afficher/masquer paramètres</a></center>
-<div id="divFiltres" class="container collapse show">
+<button class="btn btn-primary" id="BasculerMode" onclick="BasculerMode();">Afficher paramètres</button>
+
+<div id="divFiltres" class="container">
   <div class="row">
     <!--div id="testRapide"></div-->
     <div class="col cadre"
@@ -96,7 +97,9 @@
       </div>
     </div>
   </div>
+</div>
 
+<div class="container">
   <div class="row">
     <div class="col cadre">
       Filtre géographique<br>
@@ -118,17 +121,14 @@
 
   <div class="row">
     <div class="col">
-      <button class="btn btn-primary" type="button" onclick="creerFiltreEtGraphiques();">Créer les graphiques</button>
-      <span id="stats"></span>
+      <button id="boutonGraphiques" class="btn btn-primary" type="button" onclick="creerFiltreEtGraphiques();">Créer les graphiques</button>
+      <span id="stats" style="float:right;"></span>
     </div>
 </div>
 </div>
 
 <br>
-<!--
-<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#divGlobale">Evolution & récurrence globales</button>
-<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#divCateg">Evolution & récurrence de la catégorie</button>
--->
+
 <br>
 <div class="container" id="divGlobale">
 

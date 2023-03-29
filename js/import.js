@@ -38,11 +38,8 @@ function importerFichierTexte(filename, filetext)
   else
     divFilename.classList.remove("error");
 
-
   importedData.sort((a,b) => { return a[IDX_DATE] > b[IDX_DATE] || -(a[IDX_DATE] < b[IDX_DATE]) });
-  startDateGlobal = importedData[0][IDX_DATE];
-  endDateGlobal = importedData[importedData.length - 1][IDX_DATE];
-
+  setDateGlobal(importedData);
   workingData = [...importedData];
 
   resetSlider();
@@ -55,8 +52,13 @@ function importerFichierTexte(filename, filetext)
   initHeatmap();
   dessiner(workingData);
 
+  afficherStats(true);
+}
 
-  afficherStats();
+function setDateGlobal(data)
+{
+  startDateGlobal = data[0][IDX_DATE];
+  endDateGlobal = data[data.length - 1][IDX_DATE];
 }
 
 function AffichierPrevisualisation(importedData)
@@ -84,7 +86,7 @@ function AffichierPrevisualisation(importedData)
 
   str += '</tbody></table>';
   obj.innerHTML = str;
-  
+
 }
 
 
@@ -97,6 +99,8 @@ function importerWIRESHARK(txt)
   var tabHeaders = lines[0].trim().split(',');
   for (var j = 0; j < tabHeaders.length; j++) tabHeaders[j] = tabHeaders[j].replace(/^"+|"+$/g, '');
   tabHeaders = tabPad.concat(tabHeaders.slice(1));
+  
+  if (modeImportLeger) tabHeaders = tabHeaders.slice(0, offsetColonne + 2);
   remplirForm(tabHeaders);
 
   //détection du format du fichier wireshark
@@ -138,6 +142,7 @@ function importerWIRESHARK(txt)
       tab[IDX_DATE] = new Date(tab[IDX_DATE].replace(',','.'));
     }
 
+    if (modeImportLeger) tab = tab.slice(0, offsetColonne + 2);
     data.push(tab);
   }
 
@@ -152,7 +157,9 @@ function importerCITHARE(txt)
   var data = [];
 
   var tabHeaders = lines[0].trim().split(';');
-  tabHeaders = tabHeaders.slice(0,2).concat(tabHeaders.slice(4));  
+  tabHeaders = tabHeaders.slice(0,2).concat(tabHeaders.slice(4)); 
+
+  if (modeImportLeger) tabHeaders = tabHeaders.slice(0, offsetColonne + 2);
   remplirForm(tabHeaders);
 
   for (var i = 1; i < lines.length; i++)
@@ -172,6 +179,9 @@ function importerCITHARE(txt)
       var x = tab[IDX_LAT];
       tab[IDX_LAT] = parseFloat(tab[IDX_LNG]);
       tab[IDX_LNG] = parseFloat(x);
+
+      if (modeImportLeger) tab = tab.slice(0, offsetColonne + 2);
+
       data.push(tab);
     }
 
@@ -189,6 +199,8 @@ function importerCSV(txt)
   var lines = txt.split('\n');
 
   var tabHeaders = lines[0].trim().split(';');
+
+  if (modeImportLeger) tabHeaders = tabHeaders.slice(0, offsetColonne + 2);
   remplirForm(tabHeaders);
 
   //saute la première ligne
@@ -212,6 +224,7 @@ function importerCSV(txt)
       //if (dateFin == null) dateFin = date;
       //tab[IDX_DATE_FIN] = dateFin;
 
+      if (modeImportLeger) tab = tab.slice(0, offsetColonne + 2);
       data.push(tab);
       nbLineOk += 1;
     }

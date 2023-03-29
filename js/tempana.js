@@ -1,3 +1,5 @@
+var modeImportLeger = false;
+
 var map, heatmapLayer;
 var layersPoints = [];
 var importedData = [], workingData = [];
@@ -36,6 +38,7 @@ var heatmapcfg = {
 
 window.onload = function() {
 
+    $('#BasculerMode').hide();
     remplirSelectUniteTemps();
     //letzgo();
 
@@ -52,9 +55,14 @@ window.onload = function() {
     });
     L.control.scale({imperial:false}).addTo(map);
 
-    map.pm.addControls({ position: 'topleft', drawMarker: false,drawCircleMarker: false,
-      drawPolyline: false,drawText: false,cutPolygon: false,rotateMode: false });
+    MapAddControls();
 };
+
+function MapAddControls()
+{
+  map.pm.addControls({ position: 'topleft', drawMarker: false,drawCircleMarker: false,
+      drawPolyline: false,drawText: false,cutPolygon: false,rotateMode: false });
+}
 
 
 //ok
@@ -69,8 +77,11 @@ function creerFiltreEtGraphiques()
   creerNomsColonnes();
   creerGraphiques();
   afficherStats();
-  
+ 
+  //SupprimerZonesFiltres(); 
   dessiner(workingData);
+  BasculerMode();
+  document.documentElement.scrollTop = 0;
 }
 
 function creerSelectColonne()
@@ -177,7 +188,9 @@ function AfficherPeriode()
 function afficherStats()
 {
   document.getElementById('stats').innerHTML = 
-  'nbLignesImportees : ' + importedData.length + ' - nbLignesAffichees : ' + workingData.length;
+            'Lignes importées : ' + importedData.length +
+            ' - Après filtres : ' + importedData2.length +
+            ' - Sur la carte : ' + workingData.length;
 }
 
 
@@ -215,7 +228,6 @@ function creerBandeau(data)
   }
 }
 
-
 function drawLine(x)
 {
   var c = document.getElementById("bandeau");
@@ -226,10 +238,50 @@ function drawLine(x)
   ctx.stroke();
 }
 
-
-
 function resetSlider()
 {
   fromSlider.value = 0;
   toSlider.value = 100;
+}
+
+
+var carteModeConsultation = false;
+var importedData2 = [];
+
+function BasculerMode()
+{
+  carteModeConsultation = !carteModeConsultation;
+
+  if (carteModeConsultation)
+  {
+    map.pm.removeControls();
+    setDateGlobal(importedData2);
+
+    majPeriode();
+    resetSlider();
+
+    dessiner(importedData2);
+    creerBandeau(importedData2);
+
+    $('#divFiltres').hide();
+    $('#BasculerMode').show();
+    $('#boutonGraphiques').hide();
+  }
+  else
+  {
+    MapAddControls();
+    setDateGlobal(importedData);
+
+    majPeriode();
+    resetSlider();
+
+    dessiner(importedData);
+    creerBandeau(importedData);
+    
+    $('#divFiltres').show();
+    $('#BasculerMode').hide();
+    $('#boutonGraphiques').show();
+  }
+  
+
 }

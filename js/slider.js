@@ -54,16 +54,20 @@ fromSlider.oninput = () =>
   controlFromSlider(fromSlider, toSlider);
   majPeriode();
 
-  workingData = FiltrePeriode(importedData);
-  dessiner(workingData);
+  if (carteModeConsultation) workingData = FiltrePeriode(importedData2);
+  else workingData = FiltrePeriode(importedData);
+
   afficherStats();
+  dessiner(workingData);
 }
 toSlider.oninput = () => 
 {
   controlToSlider(fromSlider, toSlider);
   majPeriode();
 
-  workingData = FiltrePeriode(importedData);
-  dessiner(workingData);
+  if (carteModeConsultation) workingData = FiltrePeriode(importedData2);
+  else workingData = FiltrePeriode(importedData);
+
   afficherStats();
+  dessiner(workingData);
 }

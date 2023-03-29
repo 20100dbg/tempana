@@ -6,10 +6,11 @@ function appliquerFiltres()
 {
   workingData = [...importedData];
   workingData = FiltreColonnes(workingData);
-  workingData = FiltrePeriode(workingData);
   workingData = FiltreCoord(workingData);
   workingData = FiltreContient(workingData);
   workingData = FiltreDoublon(workingData);
+  workingData = FiltrePeriode(workingData);
+  importedData2 = [...workingData];
 }
 
 
@@ -43,7 +44,8 @@ function FiltreDoublon(data)
   var tabEltec = [];
   var filteredData = [];
 
-  if (!document.getElementById('supprimerDoublons').checked) return data;
+  if (!document.getElementById('supprimerDoublons').checked ||
+    tabColonneEltec.length == 0) return data;
 
   for (var i = 0; i < data.length; i++)
   {
@@ -118,27 +120,3 @@ function creerTabFiltres()
 
   return tabFiltres;
 }
-/*
-function FiltreCoord(data)
-{
-  if (coordLatNO == 0 && coordLatSE == 0 &&
-      coordLngNO == 0 && coordLngSE == 0)
-    return data;
-
-  var filteredData = [];
-
-  for (var i = 0; i < data.length; i++)
-  {
-    var lat = data[i][IDX_LAT];
-    var lng = data[i][IDX_LNG];
-
-    if (lat >= coordLatNO && lat <= coordLatSE && 
-        lng >= coordLngNO && lng <= coordLngSE)
-    {
-      filteredData.push(data[i]);
-    }
-  }
-
-  return filteredData;
-}
-*/

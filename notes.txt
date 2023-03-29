@@ -48,7 +48,9 @@ sélection de la colonne contenant le "count" pour le poids (heatmap et prob d'a
 
 colonnes gdh debut - gdh fin
 
-
 graph par période : ajouter des lignes
 
-graph Evolution globale pour Type Evènemnt : HS 
+récurrence par mois dans l'année
+récurrence par jour dans la semaine
+
+bug filtre période après bascule en mode consultation

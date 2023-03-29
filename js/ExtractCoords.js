@@ -22,6 +22,13 @@ function DessinerPoints(tabPoints)
     }
 }
 
+
+function SupprimerZonesFiltres()
+{
+    var tab = map.pm.getGeomanDrawLayers();
+    for (var i = 0; i < tab.length; i++) tab[i].remove();
+}
+
 function FiltreCoord(tabPoints)
 {
     var tabPolygons = map.pm.getGeomanDrawLayers();
@@ -138,7 +145,7 @@ function initHeatmap()
   var tmp = distanceNWSE / 10000;
   //console.log('dist : ' + tmp);
 
-  radius = radius * tmp / 1400;
+  radius = radius * tmp / 2000;
   //console.log('radius : ' + radius);
 
   majRadiusHeatmap(radius);
