@@ -54,3 +54,7 @@ récurrence par mois dans l'année
 récurrence par jour dans la semaine
 
 bug filtre période après bascule en mode consultation
+
+- tracer et nommer des zones
+- créer des graphiques en prenant en compte le nombre d'évenement par zones
+

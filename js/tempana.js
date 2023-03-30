@@ -260,6 +260,9 @@ function BasculerMode()
     majPeriode();
     resetSlider();
 
+    centrerVue(importedData2);
+    initHeatmap();
+
     dessiner(importedData2);
     creerBandeau(importedData2);
 
@@ -274,6 +277,9 @@ function BasculerMode()
 
     majPeriode();
     resetSlider();
+
+    centrerVue(importedData);
+    initHeatmap();
 
     dessiner(importedData);
     creerBandeau(importedData);
